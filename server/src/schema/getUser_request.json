@@ -1,0 +1,24 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "GET User Schema",
+    "required": [
+        "user_id",
+        "user_type"
+    ],
+    "properties": {
+        "user_id": {
+            "type": "string",
+            "title": "Username",
+            "minLength": 3,
+            "maxLength": 20
+        },
+        "user_type": {
+            "type": "string",
+            "title": "User",
+            "minLength": 7,
+            "maxLength": 11
+        }
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "Create User Schema",
+    "required": [
+      "user_id",
+      "user_type",
+      "item_type"
+    ],
+    "properties": {
+      "user_id": {
+        "type": "string",
+        "title": "Username",
+        "minLength": 3,
+        "maxLength": 20
+      },
+      "user_type": {
+        "title": "User",
+        "type": "string",
+        "minLength": 7,
+        "maxLength": 11
+      },
+      "item_type": {
+        "title": "itemtype",
+        "type": "string",
+        "minLength": 4,
+        "maxLength": 8
+      }
+    }
+  }

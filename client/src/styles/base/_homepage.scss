@@ -1,0 +1,240 @@
+@import '~antd/dist/antd.css';
+.site-layout-content {
+    background: #fff;
+    padding: 24px;
+    margin: 16px;
+  }
+  .logo-title{
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 24px 16px 5px;
+  }
+  .logo {
+    width: 32px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px 24px 16px 16px;
+  }
+  .logo-image{
+    width: 148px;
+    height: 48px;
+  }
+
+  .title {
+    width: 120px;
+    height: 32px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 16px 24px 16px 5px;
+  }
+  .txt-center{
+    text-align: center ;
+  }
+  .wht_fnt{
+    color: #fff;
+  }
+  
+  .pad{
+    padding:32px;
+  }
+  .bg-grey{
+    background: grey;  
+  }
+  .bg-blue{
+    background: linear-gradient(to right, #083990 0%,#157bcf 100%);
+  }
+  .layout{
+      height:100%;
+  }
+
+  .content{
+      height: 100%;
+  }
+  .about{
+    background: #4a1984;
+  }
+  .usecase{
+    background:#2B2E31;
+  }
+  .services_image{
+    width:290px;
+    height:170px;
+  }
+  .product-desc{
+    padding:32px;
+    
+  }
+  .header{
+      height: 64px;
+      padding:0 10px;
+      width:100%;
+      display: flex;
+      justify-content: space-between;
+  }
+  .footer{
+      height:300px;
+      width: 100%;
+      padding:32px;
+      text-align: center ;
+      background: rgb(255, 255, 255);
+      bottom: 0;
+      position: relative;
+       
+  }
+  .footer_user{
+    height:100px;
+    width: 100%;
+      padding:32px;
+      text-align: center ;
+      background: rgb(255, 255, 255);
+      bottom: 0;
+      position: relative;
+  }
+
+  .container-txt{
+      width:30%;
+      height:100%;
+      margin: 32px;
+      padding:16px ;
+      background: #f0f8ff;
+  }
+
+  .site-layout-container{
+    height: 100%;
+    width:100%;
+    display: flex;
+    justify-content: space-between;  
+  }
+  .container-signup{
+    width:40%;
+    padding:16px;
+    background: #f0f8ff;
+    margin:32px;
+    height: 100%;
+  }
+  .Signin-button{
+    width: 120px;
+    height: 32px;
+    margin: 16px 0px 16px 24px;
+  }
+  .presignin-button{
+    width: 150px;
+    height: 32px;
+  }
+  .presignin-button-layout{
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .card{
+    padding: 16px;
+    height:100px;
+  }
+.gn{
+  background:  #58d68d ;
+}
+.rd{
+  background:   #ec7063  ;
+}
+.bl{
+  background:    #5dade2  ;
+}
+.wht{
+  background:    #fdfefe   ;
+}
+  
+  //media queries
+  //iphone XR 414x896
+  @media screen and (max-width: 414px) {
+    .site-layout-container{
+      height: 100%;
+      display: flex;
+      flex-direction: column;  
+    }
+    .container-txt{
+      width:238px;
+      margin: 16px;
+      
+  }
+  .container-signup{
+    width:238px;
+    margin:16px;
+  }
+  }
+
+  //iphone X/XS/6/7/8 375
+  @media screen and (max-width: 376px) {
+    .site-layout-container{
+      height: 100%;
+      display: flex;
+      flex-direction: column;  
+    }
+    .container-txt{
+      width: 199px;
+      margin: 16px;
+  }
+  .container-signup{
+    width: 199px;
+    margin: 16px;
+  }
+  }
+
+  .Toast {
+    background: white;
+    border-left: 1rem solid #8a8a8a;
+    border-radius: 0.5rem;
+    box-shadow: 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.25);
+    display: flex;
+    font-family: Helvetica;
+    justify-content: space-between;
+    padding: 1rem;
+    margin: 1rem auto;
+    width:100%
+  }
+  
+  .Toast--success {
+    border-color: #008554;
+  }
+  
+  .Toast--warning {
+    border-color: #FFC627;
+  }
+  
+  .Toast--error {
+    border-color: #D14229;  
+  }
+  
+  .Toast__message-category {
+    font-weight: bold;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    margin-top: 0;
+    text-transform: capitalize;
+  }
+  
+  .Toast__message-text {
+    margin-bottom: 0;
+  }
+
+//user layout
+  .user_layout{
+    min-height: 100vh;
+  }
+
+  .user_content_margin{
+    margin: 0 16px;
+    padding:24px;
+  }
+
+  //profile
+  .user_profile_pane{
+    width: 400px;
+  }
+
+.user_profile_card{
+  width: 600px;
+  }
+
+  //register
+  .search_box{
+    width: 200px
+  }

@@ -1,0 +1,29 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "Create User Profile schema",
+    "required": [
+      "pk",
+      "sk",
+      "item"
+    ],
+    "properties": {
+      "user_id": {
+        "type": "string",
+        "title": "Username",
+        "minLength": 3,
+        "maxLength": 50
+      },
+      "user_type": {
+        "title": "user",
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 50
+      },
+      "item": {
+        "title": "update attribute",
+        "type": "object"
+      }
+    }
+  }

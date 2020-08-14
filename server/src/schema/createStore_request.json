@@ -1,0 +1,24 @@
+{
+    "definitions": {},
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "Delete User Schema",
+    "required": [
+        "zipcode",
+        "store_name"
+    ],
+    "properties": {
+        "user_id": {
+            "type": "string",
+            "title": "zipcode",
+            "minLength": 5,
+            "maxLength": 7
+        },
+        "user_type": {
+            "type": "string",
+            "title": "store_name",
+            "minLength": 1,
+            "maxLength": 30
+        }
+    }
+}

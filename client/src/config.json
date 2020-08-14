@@ -1,0 +1,23 @@
+{
+  "api": { 
+    "invokeUrl": "https://sx2c5f6tke.execute-api.us-east-1.amazonaws.com/dev"
+  },
+  "cognito": {
+    "REGION": "us-east-1",
+    "USER_POOL_ID": "us-east-1_kkcJCu4rZ",
+    "APP_CLIENT_ID": "78ca9baaqt79pnrob7o3vot1kq"
+  },
+  "lambda_api":{
+    "dev":{
+      "fetchUser":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/fetch",
+      "createUser":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/register",
+      "getStores":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/getStores",
+      "createStoreProfile":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/registerStore",
+      "updateRecord":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/updateRecord",
+      "createSlots":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/createSlot",
+      "bookSlot":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/bookSlot",
+      "checkSlot":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/checkSlot",
+      "userBooking":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/userBooking"
+    }
+  }
+}

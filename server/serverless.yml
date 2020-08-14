@@ -1,0 +1,72 @@
+
+org: amarn19
+app: etoken
+service: etoken
+
+plugins:
+  - serverless-pseudo-parameters
+  - serverless-appsync-plugin
+
+custom:
+  allowedHeaders:
+    - Accept
+    - Content-Type
+    - Content-Length
+    - Authorization
+    - X-Amz-Date
+    - X-Api-Key
+    - X-Amz-Security-Token
+    - X-Amz-User-Agent
+    - app_user_id
+    - app_user_name
+    
+  appSync:
+    name:  appsync
+    schema: schema.graphql
+    authenticationType: API_KEY
+    mappingTemplates:
+      ${file(deploy/mapping_template.yml)}
+    dataSources:
+      - type: AWS_LAMBDA
+        name: lambdaDatasource
+        description: 'Lambda DataSource'
+        config:
+          functionName: graphql
+
+provider:
+  name: aws
+  runtime: python3.7
+  region: us-east-1
+  role: EtokenServiceRole
+  stage: ${opt:stage}
+  memorySize: 128
+  timeout: 5
+  endpointType: regional
+  environment:
+    ETOKEN_TABLE: ${self:service}-${opt:stage,self:provider.stage}
+    DynamoDBStream: ${self:service}-events-${opt:stage,self:provider.stage}
+
+functions:
+  - ${file(deploy/rest.yml)}
+resources:
+  - ${file(deploy/dynamodb.yml)}
+  - ${file(deploy/servicerole.yml)}
+  - ${file(deploy/cognito.yml)}
+    
+package:
+    individually: true
+    exclude:
+    - '**'
+    - node_modules
+    - .serverless/**
+    - .env/*
+    - .tox
+    - tests
+    - .pytest_cache
+    - .pytest_cache
+    - .cache
+    include:
+    - '!./**'
+    - ./handler.py
+    - deploy/**
+    - src/**

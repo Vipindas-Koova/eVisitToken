@@ -1,0 +1,80 @@
+Resources:
+  EtokenServiceRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      RoleName: "${self:service}-service-role-${self:provider.stage}"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - appsync.amazonaws.com
+                - lambda.amazonaws.com
+                - dynamodb.amazonaws.com
+                - s3.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: "${self:service}-${self:provider.stage}-cloudwatch-Policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource:
+                  - "*"   
+        # - PolicyName: "${self:service}-${self:provider.stage}-appsync-Policy"
+        #   PolicyDocument:
+        #     Version: "2012-10-17"
+        #     Statement:
+        #       - Effect: "Allow"
+        #         Action:
+        #           - "lambda:invokeFunction"
+        #         Resource:
+        #           - "arn:aws:lambda:${self:custom.appSync.region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-*"
+        - PolicyName: "${self:service}-${self:provider.stage}-dynamodb-stream-Policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - dynamodb:GetRecords
+                  - dynamodb:GetShardIterator
+                  - dynamodb:DescribeStream
+                  - dynamodb:ListStreams
+                Resource:
+                  - "Fn::GetAtt": [ ETokenTable, StreamArn ]
+                  - "Fn::GetAtt": [ ETokenTable, Arn ]
+                  
+        - PolicyName: "${self:service}-${self:provider.stage}-dynamodb-Policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - dynamodb:DescribeTable
+                  - dynamodb:Query
+                  - dynamodb:Scan
+                  - dynamodb:GetItem
+                  - dynamodb:PutItem
+                  - dynamodb:UpdateItem
+                  - dynamodb:DeleteItem
+                Resource:
+                  - "Fn::GetAtt": [ ETokenTable, Arn ]
+                  - "Fn::GetAtt": [ DynamoDBStream, Arn ]
+
+        - PolicyName: "${self:service}-${self:provider.stage}-s3-Policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - s3:*
+                Resource:
+                  - arn:aws:s3:::${self:service}-${self:provider.stage}
+                  - arn:aws:s3:::${self:service}-${self:provider.stage}/*
+

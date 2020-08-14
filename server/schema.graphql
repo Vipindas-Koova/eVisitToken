@@ -1,0 +1,54 @@
+type Query {
+    getUser: user
+    allUsers: [user]
+    getStores(zipcode: String!): [store]
+    getSlots(zipcode:String!,store_name:String!):slot
+}
+
+type store{
+    pk:String!
+    sk:String!
+    store_details
+    slots
+}
+
+type slot{
+    slots
+}
+
+type user{
+    pk
+    sk
+    type
+}
+
+type shopper{
+    pk
+    sk
+    type
+    dashboard
+    user_details
+    history
+}
+
+type store_owner{
+    pk
+    sk
+    type
+    store_details
+    user_details
+    messages
+    dashboard
+}
+
+type Mutation {
+    addStore(input: Store): Store!
+    addUser(input: user): user!
+    deleteUser(user_id: String!,user_type: String!): String!
+    bookSlot(zipcode:String!,store_name:String!,slot_date:String!):String!
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+}

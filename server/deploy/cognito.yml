@@ -1,0 +1,42 @@
+Resources:
+  # Cognito - User pool
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: ${self:service}-${self:provider.stage}-user-pool
+      AccountRecoverySetting:  
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+      UsernameAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 6
+          RequireLowercase: False
+          RequireNumbers: True
+          RequireSymbols: False
+          RequireUppercase: True
+      UsernameConfiguration:
+          CaseSensitive: True
+      EmailConfiguration:     
+        EmailSendingAccount: COGNITO_DEFAULT
+      
+
+  #Cognito Client
+  CognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: ${self:service}-${self:provider.stage}-user-pool-client
+      UserPoolId:
+        Ref: CognitoUserPool
+      # ExplicitAuthFlows:
+      #   - ADMIN_NO_SRP_AUTH
+
+  # CognitoUserPoolId:
+  #   Description: "Cognito User Pool Id"
+  #   Value: $Ref CognitoUserPool
+
+  # CognitoUserPoolClientId:
+  #   Description: "Cognito User Pool Client Id"
+  #   Value: $Ref CognitoUserPoolClient
