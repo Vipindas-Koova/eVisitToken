@@ -9,6 +9,7 @@ from src.repositories.repository import fetchStores
 from src.repositories.repository import removeUser 
 from src.repositories.repository import registerSlot
 from src.repositories.repository import checkSlot
+from src.repositories.repository import newItem 
 import uuid
 
 # Logger configuration
@@ -21,11 +22,11 @@ def handler(event, context):
     logger.info(event)
     
     if event['field'] == 'getUser':
-        user_id = event['arguments']['user_id']
-        user_type = event['arguments']['user_type']
-        logger.info(user_id)
-        logger.ino(user_type)
-        return getUser(user_id,user_type)
+        pk = event['arguments']['pk']
+        sk = event['arguments']['sk']
+        logger.info(pk)
+        logger.info(sk)
+        return getUser(pk,sk)
     
     elif event['field'] == 'allUsers':
         logger.info("fetching all users")
@@ -37,11 +38,11 @@ def handler(event, context):
         return getStores(zipcode)
     
     elif event['field'] == 'deleteUser':
-        user_id = event['arguments']['user_id']
-        user_type = event['arguments']['user_type']
-        logger.info(user_id)
-        logger.ino(user_type)
-        return deleteUser(user_id,user_type)
+        pk = event['arguments']['pk']
+        sk = event['arguments']['sk']
+        logger.info(pk)
+        logger.ino(sk)
+        return deleteUser(pk,sk)
     
     elif event['field'] == 'bookSlot':
         zipcode = body['zipcode']
@@ -57,14 +58,23 @@ def handler(event, context):
         store_name = body['store_name']
         logger.info(zipcode)
         logger.info(store_name)
-    return getSlots(zipcode,store_name)
+        return getSlots(zipcode,store_name)
+
+    elif event['field'] == 'createUser':
+        data = event['arguments']['input']
+        logger.info(data)
+        return createUser(data)
+    
+    elif event['field'] == 'createStore':
+        data = event['arguments']['input']
+        return createStore(data)
     
     return 'Unknown field, unable to resolve '+event['field']
 
 # This is to get single User Object 
-def getUser(user_id,user_type):
+def getUser(pk,sk):
     # fetch User from the database
-    response = fetchUser(user_id,user_type)
+    response = fetchUser(pk,sk)
     logging.error(response)
     return response['Item']
 
@@ -87,9 +97,9 @@ def getStores(zipcode):
     return response['Items']
 
 # This function is use to delete User
-def deleteUser(user_id,user_type):
+def deleteUser(pk,sk):
     # delete the user from the database
-    removeUser(user_id,user_type)
+    removeUser(pk,sk)
     return "Deleted"
 
 # This function is use to book slot
@@ -108,4 +118,15 @@ def getSlots(zipcode,store_name):
     response = checkSlot(zipcode,store_name)
     logger.info(response)
     return response
-    
+
+# This function is use to get slots of store
+def createUser(data):
+    response = newItem(data)
+    logger.info(response)
+    return response
+
+# This function is use to get slots of store
+def createStore(data):
+    response = newItem(data)
+    logger.info(response)
+    return response

@@ -24,7 +24,7 @@ def storeCreation(body):
             'slots': slots
         }
         logger.info(item)
-        response = newItem(pk,sk,item)
+        response = newItem(item)
     except ClientError as e:
         if e.response['Error']['Code'] == "ConditionalCheckFailedException":
             logger.info(e.response['Error']['Message'])

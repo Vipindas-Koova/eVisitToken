@@ -1,51 +1,118 @@
 type Query {
-    getUser: user
+    getUser(pk:String!,sk:String!): user
     allUsers: [user]
     getStores(zipcode: String!): [store]
-    getSlots(zipcode:String!,store_name:String!):slot
+}
+
+
+input newuser{
+    pk:String!
+    sk:String!
+    type:String!
+    dashboard: inputdashboard,
+    user_details: inputuserDetails
+}
+
+input inputdashboard{
+ messages:[String]
+    total_visits:Int
+    upcomping_visits:Int
+    cancelled_visits:Int
+}
+
+input inputuserDetails{
+    dob:String
+    email:String
+    gender:String
+    name:String
+    phoneno:String
+    address:inputaddress
+}
+
+input inputaddress{
+    province:String
+    street:String
+}
+
+input inputstoreDetails{
+    establishedon:String
+    email:String
+    size:String
+    name:String
+    phoneno:String
+    zipcode: String
+}
+
+input inputstore{
+    pk:String!
+    sk:String!
+    store_details:inputstoreDetails!
+}
+
+
+
+type user{
+    pk:String!
+    sk:String!
+    type:String!
+    user_details: userDetails
+    history:history
+    dashboard:dashboard
+    store_details:storeDetails
+    messages:messages
+}
+
+type userDetails{
+    dob:String
+    email:String
+    gender:String
+    name:String
+    phoneno:String
+    address:address
+}
+
+type address{
+    province:String
+    street:String
+}
+
+type history{
+    messages:[String]
+}
+
+type messages{
+    messages:[String]
+}
+
+type dashboard{
+    messages:[String]
+    total_visits:Int
+    upcomping_visits:Int
+    cancelled_visits:Int
+}
+
+type storeDetails{
+    establishedon:String
+    email:String
+    size:String
+    name:String
+    phoneno:String
+    zipcode:address
 }
 
 type store{
     pk:String!
     sk:String!
-    store_details
-    slots
+    store_details:storeDetails!
 }
 
-type slot{
-    slots
-}
 
-type user{
-    pk
-    sk
-    type
-}
 
-type shopper{
-    pk
-    sk
-    type
-    dashboard
-    user_details
-    history
-}
-
-type store_owner{
-    pk
-    sk
-    type
-    store_details
-    user_details
-    messages
-    dashboard
-}
 
 type Mutation {
-    addStore(input: Store): Store!
-    addUser(input: user): user!
-    deleteUser(user_id: String!,user_type: String!): String!
-    bookSlot(zipcode:String!,store_name:String!,slot_date:String!):String!
+    createStore(input: inputstore): store
+    createUser(input: newuser): user
+    deleteUser(pk: String!,sk: String!): String
 }
 
 schema {

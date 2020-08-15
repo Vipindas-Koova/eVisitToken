@@ -17,19 +17,19 @@
   response: common-response-mapping-template.vtl
 
 - dataSource: lambdaDatasource
-  type: Query
+  type: Mutation
   field: deleteUser
   request: deleteUser-request-mapping-template.vtl
   response: common-response-mapping-template.vtl
 
 - dataSource: lambdaDatasource
-  type: Query
-  field: bookSlot
-  request: bookSlot-request-mapping-template.vtl
+  type: Mutation
+  field: createStore
+  request: createStore-request-mapping-template.vtl
   response: common-response-mapping-template.vtl
 
 - dataSource: lambdaDatasource
-  type: Query
-  field: getSlot
-  request: getSlot-request-mapping-template.vtl
+  type: Mutation
+  field: createUser
+  request: createUser-request-mapping-template.vtl
   response: common-response-mapping-template.vtl
