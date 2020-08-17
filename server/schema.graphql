@@ -4,7 +4,6 @@ type Query {
     getStores(zipcode: String!): [store]
 }
 
-
 input newuser{
     pk:String!
     sk:String!
@@ -41,6 +40,7 @@ input inputstoreDetails{
     name:String
     phoneno:String
     zipcode: String
+    address:inputaddress
 }
 
 input inputstore{
@@ -48,7 +48,6 @@ input inputstore{
     sk:String!
     store_details:inputstoreDetails!
 }
-
 
 
 type user{
