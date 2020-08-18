@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import FormErrors from "../FormErrors";
+import FormErrors from "../utility/FormErrors";
 import Validate from "../utility/FormValidation";
 import { Auth } from 'aws-amplify';
 import { Form, Input, Button, Layout } from 'antd';

@@ -4,7 +4,7 @@ import { UserOutlined, LockOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@a
 import { Link } from 'react-router-dom';
 import { Typography } from 'antd';
 import { Auth } from "aws-amplify";
-import FormErrors from "../FormErrors";
+import FormErrors from "../utility/FormErrors";
 import axios from 'axios';
 import config from "../../config.json";
 import * as Constants from '../../constants'
@@ -30,7 +30,7 @@ export default class SigninOwner extends Component {
         });
     };
 
-    fetchUserDetails(user){
+    async fetchUserDetails(user){
         try{
             var params = {
                 user_id: this.state.normal_login_username,

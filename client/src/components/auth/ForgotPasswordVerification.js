@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import FormErrors from "../FormErrors";
+import FormErrors from "../utility/FormErrors";
 import { Auth } from 'aws-amplify';
 import { Form, Input, Button, Layout } from 'antd';
 import { Typography } from 'antd';

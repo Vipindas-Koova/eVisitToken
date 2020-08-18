@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import FormErrors from "../FormErrors";
+import FormErrors from "../utility/FormErrors";
 import Validate from "../utility/FormValidation";
 import { Auth } from 'aws-amplify';
 import { Form, Input, Button, Layout } from 'antd';
@@ -22,7 +22,7 @@ class ChangePassword extends Component {
         }
     }
 
-    changePassword() {
+    async changePassword() {
         try {
             await Auth.changePassword(user, this.state.normal_login_oldpassword, this.state.normal_login_newpassword)
                 .then(resp => {
