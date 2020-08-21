@@ -1,51 +1,56 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Form, Input, Button, Checkbox, Layout } from 'antd';
 import { UserOutlined, LockOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Typography } from 'antd';
 import { Auth } from "aws-amplify";
 import FormErrors from "../utility/FormErrors";
-import axios from 'axios';
-import config from "../../config.json";
-import * as Constants from '../../constants'
+import * as Constants from '../../constants';
+import { fetchUser } from '../redux/auth/authAction';
 
 const { Title } = Typography;
 const { Header, Footer } = Layout;
 
-export default class SigninShopper extends Component {
-    state = {
+const mapStateToProps = (state) => { 
+    return {
+        a:42,
+    type: state.data,
+    loading: state.loading 
+    }
+};
 
-        userDetails: [],
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators(
+        {
+            //authenticate: (usr, pwd) => dispatch(authenticate(usr, pwd))
+            fetchUserDetails: (params, headers) => dispatch(fetchUser(params, headers))
+        }
+    );
+}
+class SigninShopper extends Component {
+
+    state = {
         errors: {
-            shopper: false,
             cognito: null,
             blankfield: false
         }
     };
-    async fetchUserDetails(user){
-        try{
+
+
+    async fetchUser(username) {
+        const session = await Auth.currentSession();
+        console.log(session);
+        try {
             var params = {
-                user_id: this.state.normal_login_username,
+                user_id: username,
                 user_type: "shopper"
             }
             const headers = {
-                'Authorization': user.signInUserSession.idToken.jwtToken
+                'Authorization': session.idToken.jwtToken
             }
-            //fetch user details upon cognito authentication
-            await axios.post(config.lambda_api.dev.fetchUser, params, { crossdomain: true, "headers": headers })
-                .then(response => {
-                    if (response.data.sk === 'shopper') {
-                        this.setState({ shopper: true, userDetails: response.data });
-                    }
-                })
-                .catch(function (error) {
-                    if (!error.response) {
-                        // network error
-                    } else {
-                        alert("Registered user is store owner.Login using store login")
-                        
-                    }
-                });
+            this.props.fetchUserDetails(params, headers);
         } catch (error) {
             let err = null;
             !error.message ? err = { "message": error } : err = error;
@@ -55,21 +60,21 @@ export default class SigninShopper extends Component {
                 }
             });
         }
-        
     }
     handleSubmit = async event => {
         event.preventDefault;
         try {
             // AWS Cognito authentication
-            const user = await Auth.signIn(this.state.normal_login_username, this.state.normal_login_password);
-            this.fetchUserDetails(user);
-            if (this.state.shopper) {
-                this.props.history.push({ pathname: '/shopper', state: { userDetails: this.state.userDetails } });
-                this.props.auth.setAuthStatus(true);
-                this.props.auth.setUser(user);
+            const user = await Auth.signIn(event.username, event.password);
+            this.fetchUser(event.username);
+            console.log("store values")
+            console.log(this.props.loading)
+            console.log(this.props.type)
+            if (this.props.type == "shopper") {
+                this.props.history.push({ pathname: '/shopper' });
             }
             else {
-                this.props.history.push({ pathname: '/presignin' });
+                // this.props.history.push({ pathname: '/presignin' });
             }
         } catch (error) {
             let err = null;
@@ -80,31 +85,32 @@ export default class SigninShopper extends Component {
                 }
             });
         }
-    };
+    }
 
     onInputChange = event => {
         this.setState({
             [event.target.id]: event.target.value
         });
-        document.getElementById(event.target.id).classList.remove("is-danger");
     };
 
-
+    
     render() {
+        console.log(this.props.loading);
         return (
             <Layout className="signin-layout">
                 <Header className="sigin-header">
-                <div className="signin-logo"><img src="/images/logo1.png" className="signin-logo" alt={Constants.image_failed} /></div>
+                    <div className="signin-logo"><img src="/images/logo1.png" className="signin-logo" alt={Constants.image_failed} /></div>
                     <div className="sigin-title"><img src="/images/logo2.png" className="sigin-title" alt={Constants.image_failed} /></div>
                 </Header>
                 <div className="sign-container">
                     <div className="form-title">
                         <Title level={3}>{Constants.signinshopper_title}</Title>
+                        <p>{this.props.loading}</p>
                     </div>
 
                     <div className="signin-form">
+                    
                         <Form
-                            name="normal_login"
                             className="login-form"
                             initialValues={{
                                 remember: true,
@@ -164,4 +170,4 @@ export default class SigninShopper extends Component {
     }
 };
 
-
+export default connect(mapStateToProps,mapDispatchToProps)(SigninShopper);

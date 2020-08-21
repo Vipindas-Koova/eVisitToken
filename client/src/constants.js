@@ -112,3 +112,17 @@ export const citynames = ["Alabama", "Alaska", "Arizona", "Arkansas", "Californi
 ]
 export const scheduler_title = "Visit Scheduler"
 export const scheduler_sub_title = ["Shpping Timings","Available Slots"]
+
+//actions
+export const REGISTER_USER = "REGISTER_USER"
+export const LOGIN_USER = "LOGIN_USER"
+export const CHANGE_PASSWORD = "CHANGE_PASSWORD"
+export const FORGOT_PASSWORD = "CHANGE_PASSWORD"
+export const FORGOT_PASSWORD_CHANGE = "FORGOT_PASSWORD_CHANGE"
+export const COGNITO_SIGNUP = "COGNITO_SIGNUP"
+export const COGNITO_SIGNIN = "COGNITO_SIGNIN"
+export const REQUEST = "REQUEST"
+export const SUCCESS = "SUCCESS"
+export const FAILURE = "FAILURE"
+export const SESSION = "SESSION"
+export const CLEAR_ESSION = "CLEAR_SESSION"

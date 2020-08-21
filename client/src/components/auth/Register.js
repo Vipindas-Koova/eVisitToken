@@ -125,7 +125,7 @@ class Register extends React.Component {
         if (err) {
             console.log(err)
             this.setState({
-                errors: { ...this.state.errors, ...err }
+                errors: { ...this.state.errors, err }
             });
             console.log(this.state.errors)
         }

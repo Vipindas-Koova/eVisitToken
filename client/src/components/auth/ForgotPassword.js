@@ -5,7 +5,7 @@ import { Auth } from 'aws-amplify';
 import { Form, Input, Button, Layout } from 'antd';
 import { Typography } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { fgtpwd_title, fgtpwd_text, fgtpwd_button, footer_text } from '../../constants'
+import { fgtpwd_title, fgtpwd_text, fgtpwd_button, footer_text,image_failed } from '../../constants'
 const { Header, Footer } = Layout;
 const { Title } = Typography;
 
@@ -31,11 +31,8 @@ class ForgotPassword extends Component {
         event.preventDefault;
         // AWS Cognito integration here
         try {
-            await Auth.forgotPassword(this.state.normal_login_email)
-            .then(resp=>{
-                if(resp.status==200)
-                this.props.history.push('/forgotpasswordverification');
-            })
+            await Auth.forgotPassword(this.state.email);
+            this.props.history.push('/forgotpasswordverification');
         } catch (error) {
             console.log(error);
         }
@@ -64,7 +61,6 @@ class ForgotPassword extends Component {
                 <div className="sign-container">
                     <div className="signin-form">
                         <Form
-                            name="normal_login"
                             className="login-form"
                             initialValues={{
                                 remember: true,

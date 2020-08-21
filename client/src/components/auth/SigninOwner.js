@@ -11,49 +11,36 @@ import * as Constants from '../../constants'
 const { Title } = Typography;
 const { Header, Footer } = Layout;
 
+const mapStateToProps = (state) => ({ type: state.payload, loading: state.loading });
+const mapDispatchToProps = dispatch => {
+    return bindActionCreators(
+        {
+            //authenticate: (usr, pwd) => dispatch(authenticate(usr, pwd))
+            fetchUserDetails: (params, headers) => dispatch(fetchUser(params, headers))
+        }
+    );
+}
 export default class SigninOwner extends Component {
     state = {
-        store_owner: false,
-        userDetails: [],
         errors: {
             cognito: null,
             blankfield: false
         }
     };
 
-    clearErrorState = () => {
-        this.setState({
-            errors: {
-                cognito: null,
-                blankfield: false
-            }
-        });
-    };
-
-    async fetchUserDetails(user){
-        try{
+    async fetchUser(username) {
+        const session = await Auth.currentSession();
+        console.log(session);
+        try {
             var params = {
-                user_id: this.state.normal_login_username,
-                user_type: "store_owner"
+                user_id: username,
+                user_type: "shopper"
             }
             const headers = {
-                'Authorization': user.signInUserSession.idToken.jwtToken
+                'Authorization': session.idToken.jwtToken
             }
-            //fetch user details upon cognito authentication 
-            await axios.post(config.lambda_api.dev.fetchUser, params, { crossdomain: true, "headers": headers })
-                .then(response => {
-                    if (response.data.sk === 'store_owner') {
-                        this.setState({ store_owner: true, userDetails: response.data });
-                    }
-                })
-                .catch(function (error) {
-                    if (!error.response) {
-                        // network error
-                    } else {
-                        alert("Registered user is shopper.Login using Shopper login")
-                    }
-                });
-        }catch (error) {
+            await this.props.fetchUserDetails(params, headers);
+        } catch (error) {
             let err = null;
             !error.message ? err = { "message": error } : err = error;
             this.setState({
@@ -68,15 +55,16 @@ export default class SigninOwner extends Component {
         event.preventDefault;
         try {
             // AWS Cognito authentication
-            const user = await Auth.signIn(this.state.normal_login_username, this.state.normal_login_password);
-            this.fetchUserDetails(user)
-            if (this.state.store_owner) {
-                this.props.history.push({ pathname: '/storeowner', state: { userDetails: this.state.userDetails } });
-                this.props.auth.setAuthStatus(true);
-                this.props.auth.setUser(user);
+            const user = await Auth.signIn(event.username, event.password);
+            this.fetchUser(event.username);
+            console.log("loading")
+            if (this.props.loading)
+                console.log(this.props.loading)
+            if (this.props.type == "shopper") {
+                this.props.history.push({ pathname: '/shopper' });
             }
             else {
-                this.props.history.push({ pathname: '/presignin' });
+                // this.props.history.push({ pathname: '/presignin' });
             }
         } catch (error) {
             let err = null;
@@ -87,7 +75,7 @@ export default class SigninOwner extends Component {
                 }
             });
         }
-    };
+    }
 
     onInputChange = event => {
         this.setState({
@@ -110,7 +98,6 @@ export default class SigninOwner extends Component {
 
                     <div className="signin-form">
                         <Form
-                            name="normal_login"
                             className="login-form"
                             initialValues={{
                                 remember: true,

@@ -1,11 +1,12 @@
 import validator from 'validator';
 import React,{Component} from 'react';
+import {store} from './components/redux/redux';
 import ReactDOM from 'react-dom';
 import AppRouter from './appRouter/AppRouter';
 import './styles/style.scss';
 import 'normalize.css/normalize.css';
 import { Auth } from 'aws-amplify';
-
+import {Provider,connect} from 'react-redux';
 class App extends Component {
   
     state = {
@@ -25,9 +26,7 @@ class App extends Component {
     async componentDidMount() {
       try {
         const session = await Auth.currentSession();
-        console.log("Session",session);
         this.setAuthStatus(true);
-        console.log(session);
         const user = await Auth.currentAuthenticatedUser();
         this.setUser(user);
       } catch(error) {
@@ -47,10 +46,12 @@ class App extends Component {
         setUser: this.setUser
       }
       return (
-        !this.state.isAuthenticating &&
+        <Provider store={store}>
+        {!this.state.isAuthenticating &&
         <div className="App">
           <AppRouter rootauth={authProps} {...this.props} ></AppRouter>
-        </div>
+        </div>}
+        </Provider>
       );
     }
   }
