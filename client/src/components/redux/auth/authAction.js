@@ -49,20 +49,20 @@ import axios from 'axios';
 //     }
 // }
 
-function request() {
+const request=()=> {
     return {
         type: Constants.REQUEST,
         info: 'Request',
     }
 }
-function success(data) {
+const success=(data)=>{
     return {
         type: Constants.SUCCESS,
         info: 'API Success',
         payload: data
     }
 }
-function failure(error) {
+const failure=(error)=>{
     return {
         type: Constants.FAILURE,
         info: 'API Failure',
@@ -91,10 +91,10 @@ function failure(error) {
 //     }
 // }
 
-export const fetchUser = (params,headers) => {
-    return function (dispatch) {
+export const fetchUser = (params,headers)=> async dispatch => {
+console.log("inside redux")
         dispatch(request())
-        axios.post(config.lambda_api.dev.fetchUser, params, { crossdomain: true, "headers": headers })
+        await axios.post(config.lambda_api.dev.fetchUser, params, { crossdomain: true, "headers": headers })
             .then(response => {
                 const users = response.data
                 dispatch(success(users))
@@ -103,7 +103,7 @@ export const fetchUser = (params,headers) => {
                 //error.message is the error description
                 dispatch(failure(error.message))
             })
-    }
+            console.log("end redux")
 }
 
 // export const authenticate = (username,password) => {

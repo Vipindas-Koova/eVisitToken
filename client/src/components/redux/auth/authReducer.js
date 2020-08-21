@@ -9,7 +9,7 @@ const initialState = {
 const authred = (state = initialState, action) => {
     console.log(action)
     switch (action.type) {
-        case REQUEST: return {loading:true}
+        case REQUEST: return {...state,loading:true}
         case SUCCESS: return {...state,loading: false, data:action.payload,error:''}
         case FAILURE: return {...state,loading: false, data:{},error:action.payload}
 
@@ -35,7 +35,7 @@ const authred = (state = initialState, action) => {
         // }
         
 
-        default: return {state}
+        default: return state
     }
 }
 

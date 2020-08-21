@@ -15,19 +15,16 @@ const { Header, Footer } = Layout;
 
 const mapStateToProps = (state) => { 
     return {
-        a:42,
-    type: state.data,
-    loading: state.loading 
+    type: state.data.sk||false,
+    loading: state.loading
     }
 };
 
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators(
-        {
-            //authenticate: (usr, pwd) => dispatch(authenticate(usr, pwd))
+    return {
             fetchUserDetails: (params, headers) => dispatch(fetchUser(params, headers))
         }
-    );
+
 }
 class SigninShopper extends Component {
 
@@ -40,8 +37,10 @@ class SigninShopper extends Component {
 
 
     async fetchUser(username) {
+        console.log("Inside start fetchuser ")
         const session = await Auth.currentSession();
-        console.log(session);
+        console.log("after session call inside fetch user")
+        console.log(session)
         try {
             var params = {
                 user_id: username,
@@ -50,7 +49,9 @@ class SigninShopper extends Component {
             const headers = {
                 'Authorization': session.idToken.jwtToken
             }
+            console.log("calling redux");
             this.props.fetchUserDetails(params, headers);
+            console.log("end redux call");
         } catch (error) {
             let err = null;
             !error.message ? err = { "message": error } : err = error;
@@ -60,21 +61,27 @@ class SigninShopper extends Component {
                 }
             });
         }
+        console.log("Inside start fetchuser ")
     }
     handleSubmit = async event => {
         event.preventDefault;
+        this.setState({
+            errors: {
+                cognito: ''
+            }
+        });
         try {
             // AWS Cognito authentication
-            const user = await Auth.signIn(event.username, event.password);
+            await Auth.signIn(event.username, event.password);
+            console.log("calling fetch user")
             this.fetchUser(event.username);
-            console.log("store values")
-            console.log(this.props.loading)
-            console.log(this.props.type)
+            console.log("end fetch user")
+            console.log("type:",this.state.type)
             if (this.props.type == "shopper") {
                 this.props.history.push({ pathname: '/shopper' });
             }
             else {
-                // this.props.history.push({ pathname: '/presignin' });
+                this.props.history.push({ pathname: '/presignin' });
             }
         } catch (error) {
             let err = null;
@@ -95,7 +102,6 @@ class SigninShopper extends Component {
 
     
     render() {
-        console.log(this.props.loading);
         return (
             <Layout className="signin-layout">
                 <Header className="sigin-header">
@@ -105,7 +111,7 @@ class SigninShopper extends Component {
                 <div className="sign-container">
                     <div className="form-title">
                         <Title level={3}>{Constants.signinshopper_title}</Title>
-                        <p>{this.props.loading}</p>
+                        <p>{this.props.type}</p>
                     </div>
 
                     <div className="signin-form">
