@@ -1,12 +1,16 @@
+import persistedReducer from '../../components/redux/auth/authReducer';
+import { persistStore } from 'redux-persist';
 const thunkMiddleware = require('redux-thunk').default
 const reduxLogger = require('redux-logger')
 const redux = require('redux')
 const createStore = redux.createStore
 const applyMiddleware = redux.applyMiddleware
-//const combineReducers = redux.combineReducers
 const logger = reduxLogger.createLogger()
-import authred from '../../components/redux/auth/authReducer';
 
-//create store
-export const store = createStore(authred,applyMiddleware(thunkMiddleware))// this can take only one reducer,
+
+export const store = createStore(persistedReducer,applyMiddleware(thunkMiddleware))
+export const persistor = persistStore(store)
+
+export default {store,persistor};
+
 store.subscribe(()=>{console.log('state',store.getState())})

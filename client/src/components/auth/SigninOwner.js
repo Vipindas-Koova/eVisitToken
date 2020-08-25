@@ -11,14 +11,18 @@ import * as Constants from '../../constants'
 const { Title } = Typography;
 const { Header, Footer } = Layout;
 
-const mapStateToProps = (state) => ({ type: state.payload, loading: state.loading });
+const mapStateToProps = (state) => { 
+    return {
+    type: state.data.sk||false,
+    loading: state.loading
+    }
+};
+
 const mapDispatchToProps = dispatch => {
-    return bindActionCreators(
-        {
-            //authenticate: (usr, pwd) => dispatch(authenticate(usr, pwd))
+    return {
             fetchUserDetails: (params, headers) => dispatch(fetchUser(params, headers))
         }
-    );
+
 }
 export default class SigninOwner extends Component {
     state = {
@@ -53,6 +57,12 @@ export default class SigninOwner extends Component {
 
     handleSubmit = async event => {
         event.preventDefault;
+        event.preventDefault;
+        this.setState({
+            errors: {
+                cognito: ''
+            }
+        });
         try {
             // AWS Cognito authentication
             const user = await Auth.signIn(event.username, event.password);

@@ -1,47 +1,20 @@
 import React, { Component } from 'react';
-import { Layout } from 'antd';
 import { Typography } from 'antd';
-import { Auth } from "aws-amplify";
+import { connect } from 'react-redux';
 import axios from 'axios';
 import config from "../../config.json";
 import { shopper_visithistory_title } from '../../constants'
 const { Title } = Typography;
 
-// const toasts = [
-//     {
-//         category: "success",
-//         type: "Completed booking",
-//         message: "Walmart # 20th JUL 2020 10AM - 11PM"
-//     },
-//     {
-//         category: "warning",
-//         type: "Upcoming booking",
-//         message: "Walmart # 24th JUL 2020 10AM - 11PM"
-//     },
-//     {
-//         category: "error",
-//         type: "Cancelled booking",
-//         message: "Bestbuy # 21th JUL 2020 10AM - 11PM"
-//     },
-//     {
-//         category: "success",
-//         type: "Completed booking",
-//         message: "Walmart # 20th JUL 2020 10AM - 11PM"
-//     },
-//     {
-//         category: "warning",
-//         type: "Upcoming booking",
-//         message: "Walmart # 24th JUL 2020 10AM - 11PM"
-//     },
-//     {
-//         category: "error",
-//         type: "Cancelled booking",
-//         message: "Bestbuy # 21th JUL 2020 10AM - 11PM"
-//     }
-// ];
+const mapStateToProps = (state) => { 
+    return {
+    data: state.data,
+    loading:state.loading,
+    error:state.error
+    }
+};
 
-
-export default class SVisitHistory extends Component {
+class SVisitHistory extends Component {
     state = {
         history: []
     }
@@ -58,7 +31,7 @@ export default class SVisitHistory extends Component {
     }
     async fetchBookings() {
         var params = {
-            user_id: this.props.profile.pk,
+            user_id: this.props.data.pk,
             user_type: "shopper"
         }
         const headers = {
@@ -104,4 +77,5 @@ export default class SVisitHistory extends Component {
     }
 };
 
+export default connect(mapStateToProps)(SVisitHistory);
 

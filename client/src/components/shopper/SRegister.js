@@ -1,21 +1,25 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Checkbox, Layout, DatePicker } from 'antd';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { Input, Button, Layout} from 'antd';
+import { } from 'react-router-dom';
 import { Typography } from 'antd';
-import { Auth } from "aws-amplify";
-import { Row, Col, Divider } from 'antd';
+import { Row, Col} from 'antd';
 import axios from 'axios';
 import config from "../../config.json";
 import { Select } from 'antd';
 import { shopper_register_title, shopper_register_headings, shopper_bookbutton } from '../../constants';
 import moment from 'moment';
+import { connect } from 'react-redux';
 const { Title, Text } = Typography;
-const { Header, Footer } = Layout;
 const { Search } = Input;
-const { Option } = Select;
 
-export default class SRegister extends Component {
+const mapStateToProps = (state) => { 
+    return {
+    data: state.data,
+    loading:state.loading,
+    error:state.error
+    }
+};
+class SRegister extends Component {
     state = {
         stores: [],//store drop down
         storeDetails: {},//complete store details
@@ -32,7 +36,7 @@ export default class SRegister extends Component {
     }
     componentDidMount() {
         this.setState({
-            messages: this.props.profile.history.messages
+            messages: this.props.data.history.messages
         })
     }
     getTimeStops(start, end,shopping_time) {
@@ -197,8 +201,8 @@ export default class SRegister extends Component {
         try {
             console.log(this.state.messages)
             var params = {
-                pk: this.props.profile.pk,
-                sk: this.props.profile.sk,
+                pk: this.props.data.pk,
+                sk: this.props.data.sk,
                 item: {
                     key: "history",
                     messages: this.state.messages
@@ -230,7 +234,7 @@ export default class SRegister extends Component {
         try {
             var dateTime = "#"+date+"#"+time
             var params = {
-                user_id: this.props.profile.pk,
+                user_id: this.props.data.pk,
                 dateTime: dateTime,
                 token_id:token.toString()
             }
@@ -338,4 +342,4 @@ export default class SRegister extends Component {
     }
 };
 
-
+export default connect(mapStateToProps)(SRegister);

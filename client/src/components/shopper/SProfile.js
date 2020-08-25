@@ -1,21 +1,23 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Tooltip, Layout, Select, prefixSelector, DatePicker, Card } from 'antd';
+import { connect } from 'react-redux';
+import { Form, Input, Button, Tooltip, Select, prefixSelector, DatePicker, Card } from 'antd';
 import { Typography } from 'antd';
-import { Row, Col, Divider } from 'antd';
+import { Row, Col } from 'antd';
 import axios from 'axios';
 import config from "../../config.json";
 import Avatar from "../utility/Avatar";
-import {
-    QuestionCircleOutlined,
-    UserOutlined,
-    EditOutlined,
-    HistoryOutlined,
-
-} from '@ant-design/icons';
+import {QuestionCircleOutlined} from '@ant-design/icons';
 import {shopper_profile_title,shopper_profile_text,profile_createbutton,profile_savebutton,citynames} from '../../constants';
-
 const { Title } = Typography;
-export default class Sprofile extends Component {
+
+const mapStateToProps = (state) => { 
+    return {
+    data: state.data.user_details,
+    loading:state.loading,
+    error:state.error
+    }
+};
+class Sprofile extends Component {
     state = {
         profileCreated: false,
         user:{
@@ -39,7 +41,6 @@ export default class Sprofile extends Component {
             'dob': fieldsValue['dob'].format('YYYY-MM-DD')
         }
         console.log('Success:', values);
-        console.log(this.props.profile)
         try {
             var params = {
                 pk: this.state.pk,
@@ -83,16 +84,18 @@ export default class Sprofile extends Component {
     onFinishFailed = errorInfo => {
         console.log('Failed:', errorInfo);
     };
+
     componentDidMount(){
         this.setState({
             user:{
-                pk:this.props.profile.pk,
-                sk:this.props.profile.sk
+                pk:this.props.data.pk,
+                sk:this.props.data.sk
             }
         })
     }   
+
     render() {
-        if (!this.state.profileCreated && this.props.profile.user_details.name == "") {
+        if (!this.state.profileCreated && this.props.data.name == "") {
             return (
                 <Card title={shopper_profile_text[0]} className="user_profile_card" bordered={true}>
                     <Button type="primary" onClick={this.handleCreate}>{profile_createbutton}</Button>
@@ -100,7 +103,7 @@ export default class Sprofile extends Component {
 
             );
         }
-        if (this.state.profileCreated || this.props.profile.user_details.name != "") {
+        if (this.state.profileCreated || this.props.data.name != "") {
             return (
                 <div>
                     <div className="header">
@@ -138,7 +141,7 @@ export default class Sprofile extends Component {
                                                 },
                                             ]}
                                         >
-                                            <Input placeholder={this.props.profile.user_details.email} />
+                                            <Input placeholder={this.props.data.email} />
                                         </Form.Item>
 
                                         <Form.Item
@@ -159,12 +162,12 @@ export default class Sprofile extends Component {
                                                 },
                                             ]}
                                         >
-                                            <Input placeholder={this.props.profile.user_details.name}/>
+                                            <Input placeholder={this.props.data.name}/>
                                         </Form.Item>
 
                                         <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
                                             <Select
-                                                placeholder={this.props.profile.user_details.gender}
+                                                placeholder={this.props.data.gender}
                                                 // onChange={this.onGenderChange}
                                                 allowClear
                                             >
@@ -174,7 +177,7 @@ export default class Sprofile extends Component {
                                             </Select>
                                         </Form.Item>
                                         <Form.Item name="dob" label="DOB">
-                                            <DatePicker format="YYYY-MM-DD" placeholder={this.props.profile.user_details.dob}/>
+                                            <DatePicker format="YYYY-MM-DD" placeholder={this.props.data.dob}/>
                                         </Form.Item>
                                         <Form.Item label="Address">
                                             <Input.Group compact>
@@ -192,7 +195,7 @@ export default class Sprofile extends Component {
                                                     noStyle
                                                     rules={[{ required: true, message: 'Street is required' }]}
                                                 >
-                                                    <Input  placeholder={this.props.profile.user_details.address.street} />
+                                                    <Input  placeholder={this.props.data.address.street} />
                                                 </Form.Item>
                                             </Input.Group>
                                         </Form.Item>
@@ -210,7 +213,7 @@ export default class Sprofile extends Component {
                                             <Input
                                                 addonBefore={prefixSelector}
                                                 
-                                                placeholder={this.props.profile.user_details.phoneno}
+                                                placeholder={this.props.data.phoneno}
                                             />
                                         </Form.Item>
 
@@ -236,6 +239,7 @@ export default class Sprofile extends Component {
             );
         }
     }
-};
+}; 
 
+export default connect(mapStateToProps)(Sprofile);
 

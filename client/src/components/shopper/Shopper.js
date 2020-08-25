@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from 'antd';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { LogoutOutlined } from '@ant-design/icons';
 import { Layout, Menu } from 'antd';
@@ -8,17 +9,31 @@ import Sdashboard from './SDashboard';
 import Sprofile from './SProfile';
 import Sregister from './SRegister';
 import SvisitHistory from './SVisitHistory';
+import { logout } from '../redux/auth/authAction';
 import {
     DesktopOutlined,
     UserOutlined,
     EditOutlined,
     HistoryOutlined,
 } from '@ant-design/icons';
-import {shopper_menu,footer_text,image_failed,logout_button} from '../../constants'
+import { shopper_menu, footer_text, image_failed, logout_button } from '../../constants'
 
 const { Header, Content, Footer, Sider } = Layout;
 var user = {}
-export default class Shopper extends Component {
+const mapStateToProps = (state) => {
+    return {
+        data: state.data,
+        loading: state.loading,
+        error: state.error
+    }
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        logout: () => dispatch(logout())
+    }
+
+};
+class Shopper extends Component {
 
     state = {
         dashboard: true,
@@ -27,38 +42,37 @@ export default class Shopper extends Component {
         visitHistory: false,
         isLoaded: false,
         collapsed: false,
-        session: {
-            accessToken: "",
-            idToken: "",
-            refreshToken: ""
-        }
+        // session: {
+        //     accessToken: "",
+        //     idToken: "",
+        //     refreshToken: ""
+        // }
     };
 
     async componentDidMount() {
         console.log("shopper onload");
-        user = this.props.location.state.userDetails
-        console.log("userdetails:" + JSON.stringify(user));
-        await Auth.currentSession().then(res => {
-            this.setState({
-                session: {
-                    accessToken: res.getAccessToken(),
-                    idToken: res.getIdToken()
-                }
+        await Auth.currentSession()
+            .then(res => {
+                this.setState({
+                    session: {
+                        accessToken: res.getAccessToken(),
+                        idToken: res.getIdToken()
+                    }
+                })
             })
-        })
-        console.log(this.state.session)
     }
 
-    handleLogOut = async event => {
-        console.log(this.props);
+    handleLogOut = event => {
         event.preventDefault;
         try {
             Auth.signOut();
             this.props.auth.setAuthStatus(false);
             this.props.auth.setUser(null);
+            this.props.logout();
         } catch (error) {
             console.log(error.message);
         }
+
     }
 
     onCollapse = collapsed => {
@@ -75,56 +89,64 @@ export default class Shopper extends Component {
 
     }
     render() {
-
-        var { isLoaded } = this.state;
+        // var { isLoaded } = this.props.loading;
         // if(!isLoaded){
         //     return <div>Loading...</div>;
         // }
+
+
         return (
-            <Layout className="user_layout">
+            <div>
+                {this.props.loading ?
+                    <div>Loading...</div> :
 
-                <Header className="header">
-                    <div className="logo-title">
-                        <img src="/images/etoken-logo.png" className="logo-image" alt={image_failed} />
-                    </div>
-                    {this.props.auth.isAuthenticated && (
-                        <Link to="/"><Button className="Signin-button" onClick={this.handleLogOut} type="primary" icon={<LogoutOutlined />}>{logout_button}</Button></Link>
+                    <Layout className="user_layout">
 
-                    )}
-
-                </Header>
-
-                <Layout>
-                    <Sider width={200} collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-                        <Menu theme="dark" defaultSelectedKeys={['0']} mode="inline">
-                            <Menu.Item key="0" icon={<DesktopOutlined />} onClick={this.onHandleContent}>{shopper_menu[0]}</Menu.Item>
-                            <Menu.Item key="1" icon={<UserOutlined />} onClick={this.onHandleContent}>{shopper_menu[1]}</Menu.Item>
-                            <Menu.Item key="2" icon={< EditOutlined />} onClick={this.onHandleContent}>{shopper_menu[2]}</Menu.Item>
-                            <Menu.Item key="3" icon={<HistoryOutlined />} onClick={this.onHandleContent}>{shopper_menu[3]}</Menu.Item>
-                        </Menu>
-                    </Sider>
-
-                    <Layout >
-                        <Content id="content-page" className="user_content_margin">
-                            <div>
-                                {this.state.dashboard && <Sdashboard dashboard={this.props.location.state.userDetails.dashboard} session={this.state.session}/>}
-                                {this.state.profile && <Sprofile profile={this.props.location.state.userDetails} session={this.state.session} />}
-                                {this.state.register && <Sregister session={this.state.session} profile={this.props.location.state.userDetails} />}
-                                {this.state.visitHistory && <SvisitHistory profile={this.props.location.state.userDetails} session={this.state.session}/>}
+                        <Header className="header">
+                            <div className="logo-title">
+                                <img src="/images/etoken-logo.png" className="logo-image" alt={image_failed} />
                             </div>
+                            {this.props.auth.isAuthenticated && (
+                                <Link to="/"><Button className="Signin-button" onClick={this.handleLogOut} type="primary" icon={<LogoutOutlined />}>{logout_button}</Button></Link>
 
-                        </Content>
-                        <Footer className="footer_user">{footer_text}</Footer>
+                            )}
+
+                        </Header>
+
+                        <Layout>
+                            <Sider width={200} collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+                                <Menu theme="dark" defaultSelectedKeys={['0']} mode="inline">
+                                    <Menu.Item key="0" icon={<DesktopOutlined />} onClick={this.onHandleContent}>{shopper_menu[0]}</Menu.Item>
+                                    <Menu.Item key="1" icon={<UserOutlined />} onClick={this.onHandleContent}>{shopper_menu[1]}</Menu.Item>
+                                    <Menu.Item key="2" icon={< EditOutlined />} onClick={this.onHandleContent}>{shopper_menu[2]}</Menu.Item>
+                                    <Menu.Item key="3" icon={<HistoryOutlined />} onClick={this.onHandleContent}>{shopper_menu[3]}</Menu.Item>
+                                </Menu>
+                            </Sider>
+
+                            <Layout >
+                                <Content id="content-page" className="user_content_margin">
+                                    <div>
+                                        {this.state.dashboard && <Sdashboard session={this.state.session} />}
+                                        {this.state.profile && <Sprofile session={this.state.session} />}
+                                        {this.state.register && <Sregister session={this.state.session} />}
+                                        {this.state.visitHistory && <SvisitHistory session={this.state.session} />}
+
+                                    </div>
+
+                                </Content>
+                                <Footer className="footer_user">{footer_text}</Footer>
+
+                            </Layout>
+
+                        </Layout>
 
                     </Layout>
-
-                </Layout>
-
-            </Layout>
-
+                }
+            </div>
 
         );
     }
 }
 
+export default connect(mapStateToProps, mapDispatchToProps)(Shopper);
 

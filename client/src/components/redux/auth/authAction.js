@@ -69,6 +69,31 @@ const failure=(error)=>{
         payload: error
     }
 }
+ const clear=()=>{
+    return {
+        type: Constants.CLEAR,
+        info: 'Clear',
+    }
+}
+
+export const fetchUser = (params,headers)=>  dispatch => {
+    dispatch(request())
+    axios.post(config.lambda_api.dev.fetchUser, params, { crossdomain: true, "headers": headers })
+        .then(response => {
+            const users = response.data
+            dispatch(success(users))
+        })
+        .catch(error => {
+            //error.message is the error description
+            dispatch(failure(error.response.data))
+        })
+}
+
+export const logout =()=> async dispatch =>{
+    console.log("Logout")
+    dispatch(clear())
+}
+
 // function headers() {
 //     return {
 //         type: HEADERS,
@@ -91,20 +116,7 @@ const failure=(error)=>{
 //     }
 // }
 
-export const fetchUser = (params,headers)=> async dispatch => {
-console.log("inside redux")
-        dispatch(request())
-        await axios.post(config.lambda_api.dev.fetchUser, params, { crossdomain: true, "headers": headers })
-            .then(response => {
-                const users = response.data
-                dispatch(success(users))
-            })
-            .catch(error => {
-                //error.message is the error description
-                dispatch(failure(error.message))
-            })
-            console.log("end redux")
-}
+
 
 // export const authenticate = (username,password) => {
 //     console.log(username,password)

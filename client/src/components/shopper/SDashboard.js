@@ -6,8 +6,16 @@ import { Row, Col, Divider } from 'antd';
 import axios from 'axios';
 import config from "../../config.json";
 import { shopper_dashboard_title, shopper_dashboard_text } from '../../constants'
+import { connect } from 'react-redux';
 
-export default class SDashboard extends Component {
+const mapStateToProps = (state) => { 
+    return {
+    data: state.data,
+    loading:state.loading,
+    error:state.error
+    }
+};
+class SDashboard extends Component {
     render() {
         return (
             <div>
@@ -18,17 +26,17 @@ export default class SDashboard extends Component {
                     <Col className="gutter-row" span={8}>
                         <div className="card gn">
                             <p>{shopper_dashboard_text[0]}</p>
-                            <p className="txt-center" >{this.props.dashboard.total_visits}</p></div>
+                            <p className="txt-center" >{this.props.data.dashboard.total_visits}</p></div>
                     </Col>
                     <Col className="gutter-row" span={8}>
                         <div className="card bl">
                             <p>{shopper_dashboard_text[1]}</p>
-                            <p className="txt-center">{this.props.dashboard.upcoming_visits}</p></div>
+                            <p className="txt-center">{this.props.data.dashboard.upcoming_visits}</p></div>
                     </Col>
                     <Col className="gutter-row" span={8}>
                         <div className="card rd">
                             <p>{shopper_dashboard_text[2]}</p>
-                            <p className="txt-center">{this.props.dashboard.cancelled_visits}</p></div>
+                            <p className="txt-center">{this.props.data.dashboard.cancelled_visits}</p></div>
                     </Col>
                 </Row>
                 <div className="pad" />
@@ -36,9 +44,9 @@ export default class SDashboard extends Component {
                     <Col className="gutter-row" span={24}>
                         <div className="card wht">
                             <p>{shopper_dashboard_text[3]}</p>
-                            {this.props.dashboard.messages.length > 0
+                            {this.props.data.history.messages.length > 0
                                 &&
-                                this.props.dashboard.messages.map(msg => (<p >{msg}</p>))}
+                                this.props.data.dashboard.messages.map(msg => (<p >{msg}</p>))}
                         </div>
                     </Col>
                 </Row>
@@ -47,4 +55,5 @@ export default class SDashboard extends Component {
     }
 };
 
+export default connect(mapStateToProps)(SDashboard);
 
