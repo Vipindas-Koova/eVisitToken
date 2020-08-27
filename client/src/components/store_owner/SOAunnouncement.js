@@ -1,24 +1,37 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, Card, Layout } from 'antd';
-import axios from 'axios';
-import config from "../../config.json";
+import { connect } from 'react-redux';
+import { Form, Input, Button, Card } from 'antd';
 import { post_button } from '../../constants'
-
+import { updateRecord,fetchUser } from '../redux/auth/authAction';
 const { TextArea } = Input;
 
-function Toast(props) {
-    var name = "Toast Toast--success";
-    return (
-        <div className={name}>
-            <main className="Toast__message">
-                <p className="Toast__message-text">{props.message}</p>
-            </main>
-        </div>
-    );
+const mapStateToProps = (state) => {
+    return {
+        data: state.data,
+        loading: state.loading,
+        error: state.error
+    }
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchUserDetails: (params, headers) => dispatch(fetchUser(params, headers)),
+        updateRecord: (params, headers) => dispatch(updateRecord(params, headers))
+    }
+
 }
-export default class SOAunnouncement extends Component {
+class SOAunnouncement extends Component {
     state = {
         messages: []
+    }
+    Toast(props) {
+        var name = "Toast Toast--success";
+        return (
+            <div className={name}>
+                <main className="Toast__message">
+                    <p className="Toast__message-text">{props.message}</p>
+                </main>
+            </div>
+        );
     }
     onFinish = async (e) => {
         console.log("Message: " + e.msg)
@@ -27,34 +40,21 @@ export default class SOAunnouncement extends Component {
         }));
         try {
             var params = {
-                pk: this.props.user.pk,
-                sk: this.props.user.sk,
+                pk: this.props.data.pk,
+                sk: this.props.data.sk,
                 item: {
                     key: "messages",
                     messages: this.state.messages
                 }
             }
-            console.log(params)
+            var fetchparams = {
+                user_id: this.props.data.pk,
+                user_type: "store_owner"
+            }
             const headers = {
                 'Authorization': this.props.session.idToken.jwtToken
             }
-            await axios.patch(config.lambda_api.dev.updateRecord, params, { crossdomain: true, "headers": headers })
-                .then(response => {
-                    if (response.status == 200)
-                        alert("Aunnoucement posted")
-                })
-                .catch(function (error) {
-                    if (!error.response) {
-                        // network error
-                    } else {
-                        // http status code
-                        const code = error.response.status
-                        // response data
-                        const response = error.response.data
-                        console.log(response);
-                        alert(response);
-                    }
-                });
+            this.props.updateRecord(params,headers);
         } catch (error) {
             alert(error)
         }
@@ -62,9 +62,9 @@ export default class SOAunnouncement extends Component {
     }
     componentDidMount() {
         console.log("History loaded")
-        console.log(this.props.user.messages.messages)
+        console.log(this.props.data.messages.messages)
         this.setState({
-            messages: this.props.user.messages.messages
+            messages: this.props.data.messages.messages
         })
     }
 
@@ -84,12 +84,12 @@ export default class SOAunnouncement extends Component {
                 <br />
                 <Card title="Aunnoucements" bordered={true}>
                     {this.state.messages.map((msg, i) => (
-                        <Toast key={i} message={msg} />
+                        <this.Toast key={i} message={msg} />
                     ))}
                 </Card>
             </div>
         );
     }
 };
-
+export default connect(mapStateToProps,mapDispatchToProps)(SOAunnouncement);
 

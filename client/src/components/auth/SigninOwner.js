@@ -1,30 +1,30 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Form, Input, Button, Checkbox, Layout } from 'antd';
 import { UserOutlined, LockOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Typography } from 'antd';
 import { Auth } from "aws-amplify";
 import FormErrors from "../utility/FormErrors";
-import axios from 'axios';
-import config from "../../config.json";
 import * as Constants from '../../constants'
+import { fetchUser } from '../redux/auth/authAction';
 const { Title } = Typography;
 const { Header, Footer } = Layout;
 
-const mapStateToProps = (state) => { 
+const mapStateToProps = (state) => {
     return {
-    type: state.data.sk||false,
-    loading: state.loading
+        type: state.data.sk || false,
+        loading: state.loading
     }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-            fetchUserDetails: (params, headers) => dispatch(fetchUser(params, headers))
-        }
+        fetchUserDetails: (params, headers) => dispatch(fetchUser(params, headers))
+    }
 
 }
-export default class SigninOwner extends Component {
+class SigninOwner extends Component {
     state = {
         errors: {
             cognito: null,
@@ -32,18 +32,16 @@ export default class SigninOwner extends Component {
         }
     };
 
-    async fetchUser(username) {
-        const session = await Auth.currentSession();
-        console.log(session);
+    async fetchUser(idToken, username) {
         try {
             var params = {
                 user_id: username,
-                user_type: "shopper"
+                user_type: "store_owner"
             }
             const headers = {
-                'Authorization': session.idToken.jwtToken
+                'Authorization': idToken
             }
-            await this.props.fetchUserDetails(params, headers);
+            this.props.fetchUserDetails(params, headers);
         } catch (error) {
             let err = null;
             !error.message ? err = { "message": error } : err = error;
@@ -54,28 +52,27 @@ export default class SigninOwner extends Component {
             });
         }
     }
+    routeShopper = (shopper) => {
+        this.props.history.push({ pathname: '/storeowner' });
+    }
 
     handleSubmit = async event => {
-        event.preventDefault;
         event.preventDefault;
         this.setState({
             errors: {
                 cognito: ''
             }
         });
+
         try {
             // AWS Cognito authentication
-            const user = await Auth.signIn(event.username, event.password);
-            this.fetchUser(event.username);
-            console.log("loading")
-            if (this.props.loading)
-                console.log(this.props.loading)
-            if (this.props.type == "shopper") {
-                this.props.history.push({ pathname: '/shopper' });
-            }
-            else {
-                // this.props.history.push({ pathname: '/presignin' });
-            }
+            await Auth.signIn(event.username, event.password)
+                .then(response => {
+                    var idToken = response.signInUserSession.idToken.jwtToken;
+                    this.fetchUser(idToken, event.username);
+                    console.log("executing test")
+                    this.routeShopper("storeowner");
+                })
         } catch (error) {
             let err = null;
             !error.message ? err = { "message": error } : err = error;
@@ -166,5 +163,7 @@ export default class SigninOwner extends Component {
         );
     }
 };
+
+export default connect(mapStateToProps, mapDispatchToProps)(SigninOwner);
 
 

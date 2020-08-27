@@ -12,7 +12,7 @@ const { Title } = Typography;
 
 const mapStateToProps = (state) => { 
     return {
-    data: state.data.user_details,
+    data: state.data,
     loading:state.loading,
     error:state.error
     }
@@ -95,7 +95,7 @@ class Sprofile extends Component {
     }   
 
     render() {
-        if (!this.state.profileCreated && this.props.data.name == "") {
+        if (!this.state.profileCreated && this.props.data.user_details.name == "") {
             return (
                 <Card title={shopper_profile_text[0]} className="user_profile_card" bordered={true}>
                     <Button type="primary" onClick={this.handleCreate}>{profile_createbutton}</Button>

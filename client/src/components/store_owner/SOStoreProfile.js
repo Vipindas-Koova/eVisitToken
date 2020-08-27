@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Form, Input, Button, Tooltip, Select, prefixSelector, DatePicker, Card } from 'antd';
 import { Typography } from 'antd';
 import { Row, Col, Divider } from 'antd';
 import axios from 'axios';
 import config from "../../config.json";
 import Avatar from "../utility/Avatar";
-import {
-    QuestionCircleOutlined
-} from '@ant-design/icons';
+import {QuestionCircleOutlined} from '@ant-design/icons';
 import {
     profile_createbutton,
     store_profile_title,
@@ -16,9 +15,26 @@ import {
     profile_savebutton
 } from '../../constants'
 const { Title } = Typography;
-export default class SOStoreProfile extends Component {
+import { updateRecord,fetchUser,createStore} from '../redux/auth/authAction';
+
+const mapStateToProps = (state) => {
+    return {
+        data: state.data,
+        loading: state.loading,
+        error: state.error
+    }
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchUserDetails: (params, headers) => dispatch(fetchUser(params, headers)),
+        updateRecord: (params, headers) => dispatch(updateRecord(params, headers)),
+        createStore:   (params, headers) => dispatch(createStore(params, headers))
+    }
+
+}
+ class SOStoreProfile extends Component {
     state = {
-        profileCreated: false,
+        profileCreated:false,
         user:{
             pk:"",
             sk:""
@@ -35,23 +51,11 @@ export default class SOStoreProfile extends Component {
         this.setState({ profileCreated: true })
         console.log(this.state.profileCreated)
     }
-    componentDidMount() {
-        console.log("onload")
-        console.log(this.props.profile.store_details.zipcode)
-        if (this.props.profile.store_details.zipcode) {
-            console.log("onload")
-            this.setState({
-                profileCreated: true
-            });
-        }
-    }
     onFinish = async (fieldsValues) => {
         const values = {
             ...fieldsValues,
             'establishedon': fieldsValues['establishedon'].format('YYYY-MM-DD')
         }
-        console.log(this.props.profile)
-        console.log('Success:', values);
         const headers = {
             'Authorization': this.props.session.idToken.jwtToken
         }
@@ -82,76 +86,38 @@ export default class SOStoreProfile extends Component {
                 name: values.store_name
             }
         }
-        console.log(params)
-        if (!this.state.profileCreated) {
-            console.log("calling api")
-            await axios.post(config.lambda_api.dev.createStoreProfile, params, { crossdomain: true, "headers": headers })
-                .catch(function (error) {
-                    if (!error.response) {
-                        // network error
-                    } else {
-                        // http status code
-                        const code = error.response.status
-                        // response data
-                        const response = error.response.data
-                        console.log(response);
-                        alert(response);
-                    }
-                });
+        var updateparams = {
+            pk: this.props.data.pk,
+            sk: this.props.data.sk,
+            item: {
+                key: "store_details",
+                email: values.store_email,
+                address: values.store_address,
+                establishedon: values.establishedon,
+                size: values.store_size,
+                phoneno: values.store_phonenumber,
+                zipcode: values.store_zipcode,
+                name: values.store_name
+            }
         }
-        else {
-            console.log("calling update api")
-            await axios.patch(config.lambda_api.dev.updateRecord, updateStoreParams, { crossdomain: true, "headers": headers })
-                .catch(function (error) {
-                    if (!error.response) {
-                        // network error
-                    } else {
-                        // http status code
-                        const code = error.response.status
-                        // response data
-                        const response = error.response.data
-                        console.log(response);
-                        alert(response);
-                    }
-                });
+        var fetchparams = {
+            user_id: this.props.data.pk,
+            user_type: "store_owner"
         }
         //calling createstore api
         try {
-
-            var updateparams = {
-                pk: this.props.profile.pk,
-                sk: this.props.profile.sk,
-                item: {
-                    key: "store_details",
-                    email: values.store_email,
-                    address: values.store_address,
-                    establishedon: values.establishedon,
-                    size: values.store_size,
-                    phoneno: values.store_phonenumber,
-                    zipcode: values.store_zipcode,
-                    name: values.store_name
-                }
+            if (!this.state.profileCreated) {
+                console.log("calling create profile api");
+                this.props.createStore(params,headers);
             }
-            console.log(updateparams)
-
+            else {
+                console.log("calling update store  api");
+                this.props.updateRecord(updateStoreParams,headers);
+            }
             //update store details in user profile
-            await axios.patch(config.lambda_api.dev.updateRecord, updateparams, { crossdomain: true, "headers": headers })
-                .then(response => {
-                    if (response.status == 200)
-                        alert("Store Profile updated")
-                })
-                .catch(function (error) {
-                    if (!error.response) {
-                        // network error
-                    } else {
-                        // http status code
-                        const code = error.response.status
-                        // response data
-                        const response = error.response.data
-                        console.log(response);
-                        alert(response);
-                    }
-                });
+            console.log("Updating store details of user");
+            this.props.updateRecord(updateparams,headers);
+           await this.props.fetchUserDetails(fetchparams, headers); 
         } catch (error) {
             let err = null;
             !error.message ? err = { "message": error } : err = error;
@@ -169,13 +135,18 @@ export default class SOStoreProfile extends Component {
     componentDidMount(){
         this.setState({
             user:{
-                pk:this.props.profile.pk,
-                sk:this.props.profile.sk
+                pk:this.props.data.pk,
+                sk:this.props.data.sk
             }
         })
+        if (this.props.data.store_details.zipcode) {
+            this.setState({
+                profileCreated: true
+            });
+        }
     }
     render() {
-        if (!this.state.profileCreated && this.props.profile.store_details.zipcode == "") {
+        if (!this.state.profileCreated) {
             return (
                 <Card title={store_profile_text[0]} className="user_profile_card" bordered={true}>
                     <Button type="primary" onClick={this.handleCreate}>{profile_createbutton}</Button>
@@ -220,7 +191,7 @@ export default class SOStoreProfile extends Component {
                                                 },
                                             ]}
                                         >
-                                            <Input placeholder={this.props.profile.store_details.email}/>
+                                            <Input placeholder={this.props.data.store_details.email}/>
                                         </Form.Item>
 
                                         <Form.Item
@@ -241,11 +212,11 @@ export default class SOStoreProfile extends Component {
                                                 },
                                             ]}
                                         >
-                                            <Input placeholder={this.props.profile.store_details.name}/>
+                                            <Input placeholder={this.props.data.store_details.name}/>
                                         </Form.Item>
 
                                         <Form.Item name="establishedon" label="Established on">
-                                            <DatePicker format="YYYY-MM-DD" placeholder={this.props.profile.store_details.establishedon}/>
+                                            <DatePicker format="YYYY-MM-DD" placeholder={this.props.data.store_details.establishedon}/>
                                         </Form.Item>
                                         <Form.Item
                                             label="Store Address:">
@@ -255,7 +226,7 @@ export default class SOStoreProfile extends Component {
                                                     noStyle
                                                     rules={[{ required: true, message: 'Province is required' }]}
                                                 >
-                                                    <Select placeholder="Select province">
+                                                    <Select placeholder={this.props.data.user_details.address.province} >
                                                         {citynames.map(name => (<Select.Option key={name}>{name}</Select.Option>))}
                                                     </Select>
                                                 </Form.Item>
@@ -264,7 +235,7 @@ export default class SOStoreProfile extends Component {
                                                     noStyle
                                                     rules={[{ required: true, message: 'Street is required' }]}
                                                 >
-                                                    <Input placeholder="Input street" />
+                                                    <Input placeholder="Input street" placeholder={this.props.data.user_details.address.street}  />
                                                 </Form.Item>
                                             </Input.Group>
                                         </Form.Item>
@@ -278,7 +249,7 @@ export default class SOStoreProfile extends Component {
                                                 },
                                             ]}
                                         >
-                                            <Input placeholder={this.props.profile.store_details.size}/>
+                                            <Input placeholder={this.props.data.store_details.size}/>
                                         </Form.Item>
                                         <Form.Item
                                             name="store_zipcode"
@@ -290,7 +261,7 @@ export default class SOStoreProfile extends Component {
                                                 },
                                             ]}
                                         >
-                                            <Input placeholder={this.props.profile.store_details.zipcode}/>
+                                            <Input placeholder={this.props.data.store_details.zipcode}/>
                                         </Form.Item>
                                         <Form.Item
                                             name="store_phonenumber"
@@ -302,7 +273,7 @@ export default class SOStoreProfile extends Component {
                                                 },
                                             ]}
                                         >
-                                            <Input addonBefore={prefixSelector} placeholder={this.props.profile.store_details.phoneno}/>
+                                            <Input addonBefore={prefixSelector} placeholder={this.props.data.store_details.phoneno}/>
                                         </Form.Item>
 
                                         <Form.Item {...this.tailLayout}>
@@ -328,4 +299,4 @@ export default class SOStoreProfile extends Component {
     }
 };
 
-
+export default connect(mapStateToProps,mapDispatchToProps)(SOStoreProfile)

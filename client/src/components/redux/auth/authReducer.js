@@ -44,9 +44,6 @@ const rootReducer = (state = initialState, action) => {
         default: return state
     }
 }
-// export default combineReducers({
-//     auth:authred
-// })
 
 const persistConfig = {
     key: 'root',

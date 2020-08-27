@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Form, Input, Button, InputNumber, Layout, DatePicker, TimePicker, Card } from 'antd';
+import { connect } from 'react-redux';
+import { Form, Button, InputNumber, DatePicker, TimePicker, Card } from 'antd';
 import { Typography } from 'antd';
 import { Row, Col } from 'antd';
 import axios from 'axios';
@@ -10,18 +11,35 @@ const { Title } = Typography;
 const format = 'HH:mm';
 const dateFormat = 'YYYY/MM/DD';
 const { RangePicker } = DatePicker;
+import { createSlots,fetchUser } from '../redux/auth/authAction';
 
-function Toast(props) {
-    var name = "Toast Toast--success";
-    return (
-        <div className={name}>
-            <main className="Toast__message">
-                <p className="Toast__message-text">{props.message}</p>
-            </main>
-        </div>
-    );
+const mapStateToProps = (state) => {
+    return {
+        data: state.data,
+        loading: state.loading,
+        error: state.error
+    }
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchUserDetails: (params, headers) => dispatch(fetchUser(params, headers)),
+        createSlots: (params, headers) => dispatch(createSlots(params, headers))
+    }
+
 }
-export default class SOSchedule extends Component {
+
+class SOSchedule extends Component {
+    Toast(props) {
+        var name = "Toast Toast--success";
+        return (
+            <div className={name}>
+                <main className="Toast__message">
+                    <p className="Toast__message-text">{props.message}</p>
+                </main>
+            </div>
+        );
+    }
     getDates = (startDate, stopDate) => {
         var dateArray = [];
         var currentDate = moment(startDate);
@@ -45,7 +63,6 @@ export default class SOSchedule extends Component {
         timeslots: []
     }
     onFinish = async (fieldsValue) => {
-        console.log(fieldsValue)
         const rangeValue = fieldsValue['slot_date'];
         const values = {
             ...fieldsValue,
@@ -61,9 +78,10 @@ export default class SOSchedule extends Component {
         }
         else
             slots = this.getDates(values.slot_date[0], values.slot_date[1])
-        var param = {
-            zipcode: this.props.profile.store_details.zipcode,
-            store_name: this.props.profile.store_details.name,
+
+        var params = {
+            zipcode: this.props.data.store_details.zipcode,
+            store_name: this.props.data.store_details.name,
             slot_date: slots,
             start_time: values.start_time,
             end_time: values.end_time,
@@ -74,30 +92,12 @@ export default class SOSchedule extends Component {
             'Authorization': this.props.session.idToken.jwtToken
         }
         var info = "Date:" + slots + " start_time:" + values.start_time + " end_time:" + values.end_time + " shopping_time:" + values.shopping_time + " capacity:" + values.capacity;
-        console.log(info)
+
         try {
-            await axios.patch(config.lambda_api.dev.createSlots, param, { crossdomain: true, "headers": headers })
-                .then(response => {
-                    if (response.status == 200) {
-                        alert("Slot added")
-                        this.setState(prevState => ({
-                            timeslots: [...prevState.timeslots, info]
-                        }));
-                    }
-                })
-                .catch(function (error) {
-                    if (!error.response) {
-                        // network error
-                    } else {
-                        // http status code
-                        const code = error.response.status
-                        // response data
-                        const response = error.response.data
-                        console.log(response);
-                        alert(response);
-                    }
-                });
-                await axios.patch(config.lambda_api.dev.updateRecord, params, { crossdomain: true, "headers": headers })
+            this.props.createSlots(params,headers);
+            this.setState(prevState => ({
+                timeslots: [...prevState.timeslots, info]
+            }));
         } catch (error) {
             let err = null;
             !error.message ? err = { "message": error } : err = error;
@@ -168,7 +168,7 @@ export default class SOSchedule extends Component {
                         <div>
                             <Card title={scheduler_sub_title[1]} bordered={true}>
                                 {this.state.timeslots.map((msg, i) => (
-                                    <Toast key={i} message={msg} />
+                                    <this.Toast key={i} message={msg} />
                                 ))}
                             </Card>
                         </div>
@@ -179,4 +179,5 @@ export default class SOSchedule extends Component {
     }
 };
 
+export default connect(mapStateToProps,mapDispatchToProps)(SOSchedule);
 

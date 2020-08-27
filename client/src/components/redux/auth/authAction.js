@@ -1,82 +1,35 @@
 import * as Constants from '../../../constants';
 import config from "../../../config.json";
-import { Auth } from "aws-amplify";
 import axios from 'axios';
 
-//action creators returning action objects with type property
-
-// export const forgotPasword = (email) => {
-//     return {
-//         type: Constants.FORGOT_PASSWORD,
-//         info: 'forgot password',
-//         email
-//     }
-// }
-
-// export const registerUser = (username, type) => {
-//     return {
-//         type: Constants.REGISTER_USER,
-//         info: 'User registeration',
-//         username,
-//         type
-//     }
-// }
-// export const cognitoSignIn = (username, password) => {
-//     return {
-//         type: Constants.COGNITO_SIGNIN,
-//         info: 'Cognito signin',
-//         username,
-//         password,
-//     }
-// }
-
-// export const changePassword = (user, oldpassword, newpassword) => {
-//     return {
-//         type: Constants.CHANGE_PASSWORD,
-//         info: 'change password',
-//         user,
-//         oldpassword,
-//         newpassword
-//     }
-// }
-// export const forgotPaswordVerification = (email, verificationcode, newpassword) => {
-//     return {
-//         type: Constants.FORGOT_PASSWORD,
-//         info: 'forgot password',
-//         email,
-//         verificationcode,
-//         newpassword
-//     }
-// }
-
-const request=()=> {
+const request = () => {
     return {
         type: Constants.REQUEST,
         info: 'Request',
     }
 }
-const success=(data)=>{
+const success = (data) => {
     return {
         type: Constants.SUCCESS,
         info: 'API Success',
         payload: data
     }
 }
-const failure=(error)=>{
+const failure = (error) => {
     return {
         type: Constants.FAILURE,
         info: 'API Failure',
         payload: error
     }
 }
- const clear=()=>{
+const clear = () => {
     return {
         type: Constants.CLEAR,
         info: 'Clear',
     }
 }
 
-export const fetchUser = (params,headers)=>  dispatch => {
+export const fetchUser = (params, headers) => dispatch => {
     dispatch(request())
     axios.post(config.lambda_api.dev.fetchUser, params, { crossdomain: true, "headers": headers })
         .then(response => {
@@ -89,46 +42,39 @@ export const fetchUser = (params,headers)=>  dispatch => {
         })
 }
 
-export const logout =()=> async dispatch =>{
+export const logout = () => async dispatch => {
     console.log("Logout")
     dispatch(clear())
 }
 
-// function headers() {
-//     return {
-//         type: HEADERS,
-//         info: 'API HEADER'
-//     }
-// }
+export const updateRecord = (params, headers) => dispatch => {
+    axios.patch(config.lambda_api.dev.updateRecord, params, { crossdomain: true, "headers": headers })
+        .then(response => {
+            alert(response.data);
+        })
+        .catch(error => {
+            //error.message is the error description
+            dispatch(failure(error.response.data))
+        })
+}
 
-// const fgtpwd = (email) => {
-//     return function (dispatch) {
-//         dispatch(request())
-//         Auth.forgotPassword(email)
-//             .then(response => {
-//                 const users = response.data.map(user => user.username)
-//                 dispatch(success(users))
-//             })
-//             .catch(error => {
-//                 //error.message is the error description
-//                 dispatch(failure(error.message))
-//             })
-//     }
-// }
-
-
-
-// export const authenticate = (username,password) => {
-//     console.log(username,password)
-//     return function (dispatch) {
-//         dispatch(request());
-//         Auth.signIn(username, password)
-//             .then(response => {
-//                 dispatch(success(response))
-//             })
-//             .catch(error => {
-//                 //error.message is the error description
-//                 dispatch(failure(error.message))
-//             })
-//     }
-// }
+export const createStore = (params, headers) => dispatch => {
+    axios.post(config.lambda_api.dev.createStoreProfile, params, { crossdomain: true, "headers": headers })
+        .then(response => {
+            alert(response.data);
+        })
+        .catch(error => {
+            //error.message is the error description
+            dispatch(failure(error.response.data))
+        })
+}
+export const createSlots = (params, headers) => dispatch => {
+     axios.patch(config.lambda_api.dev.createSlots, params, { crossdomain: true, "headers": headers })
+        .then(response => {
+            alert(response.data);
+        })
+        .catch(error => {
+            //error.message is the error description
+            dispatch(failure(error.response.data))
+        })
+}

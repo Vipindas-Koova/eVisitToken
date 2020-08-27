@@ -2,11 +2,20 @@ import React, { Component } from 'react';
 import { Typography } from 'antd';
 import { Row, Col } from 'antd';
 import { shopper_dashboard_title, shopper_dashboard_text } from '../../constants';
-
+import { connect } from 'react-redux';
 const { Title } = Typography;
 
-export default class SODashboard extends Component {
+const mapStateToProps = (state) => { 
+    return {
+    data: state.data,
+    loading:state.loading,
+    error:state.error
+    }
+};
+class SODashboard extends Component {
+    
     render() {
+        console.log(this.props.data);
         return (
             <div>
                 <div className="header">
@@ -16,17 +25,17 @@ export default class SODashboard extends Component {
                     <Col className="gutter-row" span={8}>
                         <div className="card gn">
                             <p>{shopper_dashboard_text[0]}</p>
-                            <p className="txt-center" >{this.props.dashboard.total_visits}</p></div>
+                            <p className="txt-center" >{this.props.data.dashboard.total_visits}</p></div>
                     </Col>
                     <Col className="gutter-row" span={8}>
                         <div className="card bl">
                             <p>{shopper_dashboard_text[1]}</p>
-                            <p className="txt-center">{this.props.dashboard.upcoming_visits}</p></div>
+                            <p className="txt-center">{this.props.data.dashboard.upcoming_visits}</p></div>
                     </Col>
                     <Col className="gutter-row" span={8}>
                         <div className="card rd">
                             <p>{shopper_dashboard_text[2]}</p>
-                            <p className="txt-center">{this.props.dashboard.cancelled_visits}</p></div>
+                            <p className="txt-center">{this.props.data.dashboard.cancelled_visits}</p></div>
                     </Col>
                 </Row>
                 <div className="pad" />
@@ -34,7 +43,7 @@ export default class SODashboard extends Component {
                     <Col className="gutter-row" span={24}>
                         <div className="card wht">
                             <p>{shopper_dashboard_text[2]}</p>
-                            {this.props.dashboard.messages.length > 0
+                            {this.props.data.dashboard.messages.length > 0
                                 &&
                                 this.props.dashboard.messages.map(msg => (<p >{msg}</p>))}
                         </div>
@@ -45,4 +54,4 @@ export default class SODashboard extends Component {
     }
 };
 
-
+export default connect(mapStateToProps)(SODashboard);

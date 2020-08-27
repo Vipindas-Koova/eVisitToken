@@ -1,29 +1,34 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Form, Input, Button, Tooltip, Layout, Select, prefixSelector, DatePicker, Card } from 'antd';
-import { Link } from 'react-router-dom';
 import { Typography } from 'antd';
 const { Title } = Typography;
-const { Header, Footer } = Layout;
-import { Auth } from "aws-amplify";
-import { Row, Col, Divider } from 'antd';
-import axios from 'axios';
-import config from "../../config.json";
+import { Row, Col} from 'antd';
 import Avatar from "../utility/Avatar";
-import {
-    QuestionCircleOutlined,
-    UserOutlined,
-    EditOutlined,
-    HistoryOutlined,
+import { QuestionCircleOutlined } from '@ant-design/icons';
+import { shopper_profile_title, shopper_profile_text, profile_createbutton, profile_savebutton, citynames } from '../../constants';
+import { updateRecord,fetchUser } from '../redux/auth/authAction';
 
-} from '@ant-design/icons';
-import {shopper_profile_title,shopper_profile_text,profile_createbutton,profile_savebutton,citynames} from '../../constants';
+const mapStateToProps = (state) => {
+    return {
+        data: state.data,
+        loading: state.loading,
+        error: state.error
+    }
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchUserDetails: (params, headers) => dispatch(fetchUser(params, headers)),
+        updateRecord: (params, headers) => dispatch(updateRecord(params, headers))
+    }
 
-export default class SOProfile extends Component {
+}
+class SOProfile extends Component {
     state = {
         profileCreated: false,
-        user:{
-            pk:"",
-            sk:""
+        user: {
+            pk: "",
+            sk: ""
         }
     }
     layout = {
@@ -37,17 +42,68 @@ export default class SOProfile extends Component {
         this.setState({ profileCreated: true })
         console.log(this.state.profileCreated)
     }
-    onFinish = async(fieldsValue) => {
-        console.log(this.props.profile, this.props.profile.user_details.name)
+    // onFinish = async (fieldsValue) => {
+    //     console.log(this.props.profile, this.props.data.name)
+    //     const values = {
+    //         ...fieldsValue,
+    //         'dob': fieldsValue['dob'].format('YYYY-MM-DD')
+    //     }
+    //     console.log('Success:', values);
+    //     try {
+    //         var params = {
+    //             pk: this.props.data.pk,
+    //             sk: this.props.data.sk,
+    //             item: {
+    //                 key: "user_details",
+    //                 address: values.address,
+    //                 dob: values.dob,
+    //                 email: values.email,
+    //                 gender: values.gender,
+    //                 name: values.name,
+    //                 phonenumber: values.phonenumber
+    //             }
+    //         }
+    //         const headers = {
+    //             'Authorization': this.props.session.idToken.jwtToken
+    //         }
+    //         await axios.patch(config.lambda_api.dev.updateRecord, params, { crossdomain: true, "headers": headers })
+    //             .then(response => {
+    //                 if (response.status == 200)
+    //                     alert("Profile updated")
+    //             })
+    //             .catch(function (error) {
+    //                 if (!error.response) {
+    //                     // network error
+    //                 } else {
+    //                     // http status code
+    //                     const code = error.response.status
+    //                     // response data
+    //                     const response = error.response.data
+    //                     console.log(response);
+    //                     alert(response);
+    //                 }
+    //             });
+    //     } catch (error) {
+    //         let err = null;
+    //         !error.message ? err = { "message": error } : err = error;
+    //         this.setState({
+    //             errors: {
+    //                 cognito: err
+    //             }
+    //         });
+    //     }
+    // };
+
+    onFinish = async (fieldsValue) => {
+        console.log(this.props.profile, this.props.data.name)
         const values = {
             ...fieldsValue,
             'dob': fieldsValue['dob'].format('YYYY-MM-DD')
         }
-        console.log('Success:', values);
         try {
             var params = {
-                pk: this.props.profile.pk,
-                sk: this.props.profile.sk,
+                pk: this.props.data.pk,
+                sk: this.props.data.sk,
                 item: {
                     key: "user_details",
                     address: values.address,
@@ -58,28 +114,15 @@ export default class SOProfile extends Component {
                     phonenumber: values.phonenumber
                 }
             }
-            console.log(params)
-            console.log("calling api")
+            var fetchparams = {
+                user_id: this.props.data.pk,
+                user_type: "store_owner"
+            }
             const headers = {
                 'Authorization': this.props.session.idToken.jwtToken
-              }
-            await axios.patch(config.lambda_api.dev.updateRecord, params,{ crossdomain : true,"headers":headers})
-            .then(response=>{
-                if(response.status==200)
-                alert("Profile updated")
-            })
-            .catch(function (error) {
-                    if (!error.response) {
-                        // network error
-                    } else {
-                        // http status code
-                        const code = error.response.status
-                        // response data
-                        const response = error.response.data
-                        console.log(response);
-                        alert(response);
-                    }
-                });
+            }
+            this.props.updateRecord(params,headers);
+            this.props.fetchUserDetails(fetchparams, headers);    
         } catch (error) {
             let err = null;
             !error.message ? err = { "message": error } : err = error;
@@ -90,20 +133,19 @@ export default class SOProfile extends Component {
             });
         }
     };
-
     onFinishFailed = errorInfo => {
         console.log('Failed:', errorInfo);
     };
-    componentDidMount(){
+    componentDidMount() {
         this.setState({
-            user:{
-                pk:this.props.profile.pk,
-                sk:this.props.profile.sk
+            user: {
+                pk: this.props.data.pk,
+                sk: this.props.data.sk
             }
         })
     }
     render() {
-        if (!this.state.profileCreated && this.props.profile.name == "") {
+        if (!this.state.profileCreated && this.props.data.user_details.name == "") {
             return (
                 <Card title={shopper_profile_text[0]} className="user_profile_card" bordered={true}>
                     <Button type="primary" onClick={this.handleCreate}>{profile_createbutton}</Button>
@@ -111,12 +153,11 @@ export default class SOProfile extends Component {
 
             );
         }
-        if (this.state.profileCreated || this.props.profile.name != "") {
+        if (this.state.profileCreated || this.props.data.user_details.name != "") {
             return (
                 <div>
                     <div className="header">
                         <Title level={3} >{shopper_profile_title}</Title>
-                        <p>{this.props.profile.name}</p>
                     </div>
                     <Row >
 
@@ -150,7 +191,7 @@ export default class SOProfile extends Component {
                                                 },
                                             ]}
                                         >
-                                            <Input placeholder={this.props.profile.user_details.email} />
+                                            <Input placeholder={this.props.data.user_details.email} />
                                         </Form.Item>
 
                                         <Form.Item
@@ -171,12 +212,12 @@ export default class SOProfile extends Component {
                                                 },
                                             ]}
                                         >
-                                            <Input placeholder={this.props.profile.user_details.name}/>
+                                            <Input placeholder={this.props.data.user_details.name} />
                                         </Form.Item>
 
                                         <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
                                             <Select
-                                                placeholder={this.props.profile.user_details.gender}
+                                                placeholder={this.props.data.user_details.gender}
                                                 // onChange={this.onGenderChange}
                                                 allowClear
                                             >
@@ -186,7 +227,7 @@ export default class SOProfile extends Component {
                                             </Select>
                                         </Form.Item>
                                         <Form.Item name="dob" label="DOB">
-                                            <DatePicker format="YYYY-MM-DD" placeholder={this.props.profile.user_details.dob} />
+                                            <DatePicker format="YYYY-MM-DD" placeholder={this.props.data.user_details.dob} />
                                         </Form.Item>
                                         <Form.Item label="Address">
                                             <Input.Group compact>
@@ -204,7 +245,7 @@ export default class SOProfile extends Component {
                                                     noStyle
                                                     rules={[{ required: true, message: 'Street is required' }]}
                                                 >
-                                                    <Input style={{ width: '50%' }} placeholder={this.props.profile.user_details.address.street} />
+                                                    <Input style={{ width: '50%' }} placeholder={this.props.data.user_details.address.street} />
                                                 </Form.Item>
                                             </Input.Group>
                                         </Form.Item>
@@ -224,7 +265,7 @@ export default class SOProfile extends Component {
                                                 style={{
                                                     width: '100%',
                                                 }}
-                                                placeholder={this.props.profile.user_details.phoneno}
+                                                placeholder={this.props.data.user_details.phoneno}
                                             />
                                         </Form.Item>
 
@@ -249,9 +290,7 @@ export default class SOProfile extends Component {
                 </div>
             );
         }
-
-
     }
 };
 
-
+export default connect(mapStateToProps,mapDispatchToProps)(SOProfile);
