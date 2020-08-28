@@ -29,37 +29,8 @@ class SVisitHistory extends Component {
             </div>
         );
     }
-    async fetchBookings() {
-        var params = {
-            user_id: this.props.data.pk,
-            user_type: "shopper"
-        }
-        const headers = {
-            'Authorization': this.props.session.idToken.jwtToken
-        }
-        try {
-            await axios.post(config.lambda_api.dev.fetchUser, params, { crossdomain: true, "headers": headers })
-                .then(response => {
-                    this.setState({
-                        history: response.data.history.messages
-                    })
-
-                })
-                .catch(function (error) {
-                    if (!error.response) {
-                        // network error
-                    } else {
-                        alert("Error fetching bookings")
-
-                    }
-                });
-        } catch(error){
-            alert("Unexpected error.Try again")
-        }
-    }
     componentDidMount() {
         console.log("History loaded")
-        this.fetchBookings();
     }
     render() {
         return (
@@ -68,7 +39,7 @@ class SVisitHistory extends Component {
                     <Title level={3} >{shopper_visithistory_title}</Title>
                 </div>
                 <div>
-                    {this.state.history.map((msg, i) => (
+                    {this.props.data.history.messages.map((msg, i) => (
                         <this.Toast key={i} message={msg} />
                     ))}
                 </div>

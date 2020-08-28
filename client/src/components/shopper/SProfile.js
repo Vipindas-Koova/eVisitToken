@@ -9,6 +9,7 @@ import Avatar from "../utility/Avatar";
 import {QuestionCircleOutlined} from '@ant-design/icons';
 import {shopper_profile_title,shopper_profile_text,profile_createbutton,profile_savebutton,citynames} from '../../constants';
 const { Title } = Typography;
+import { updateRecord,fetchUser } from '../redux/auth/authAction';
 
 const mapStateToProps = (state) => { 
     return {
@@ -17,6 +18,13 @@ const mapStateToProps = (state) => {
     error:state.error
     }
 };
+const mapDispatchToProps = dispatch => {
+    return {
+        fetchUserDetails: (params, headers) => dispatch(fetchUser(params, headers)),
+        updateRecord: (params, headers) => dispatch(updateRecord(params, headers))
+    }
+
+}
 class Sprofile extends Component {
     state = {
         profileCreated: false,
@@ -40,11 +48,10 @@ class Sprofile extends Component {
             ...fieldsValue,
             'dob': fieldsValue['dob'].format('YYYY-MM-DD')
         }
-        console.log('Success:', values);
         try {
             var params = {
-                pk: this.state.pk,
-                sk: this.state.sk,
+                pk: this.props.data.pk,
+                sk: this.props.data.sk,
                 item: {
                     key: "user_details",
                     address: values.address,
@@ -56,30 +63,26 @@ class Sprofile extends Component {
                     zipcode:values.zipcode
                 }
             }
+            var fetchparams = {
+                user_id: this.props.data.pk,
+                user_type: "shopper"
+            }
             const headers = {
                 'Authorization': this.props.session.idToken.jwtToken
               }
-            await axios.patch(config.lambda_api.dev.updateRecord, params,{ crossdomain : true,"headers":headers})
-            .then(response=>{
-                if(response.status==200)
-                alert("Profile updated")
-            })
-                .catch(function (error) {
-                    if (!error.response) {
-                        // network error
-                    } else {
-                        // http status code
-                        const code = error.response.status
-                        // response data
-                        const response = error.response.data
-                        console.log(response);
-                        alert(response);
-                    }
-                });
+            this.props.updateRecord(params,headers);
+            await this.props.fetchUserDetails(fetchparams, headers); 
+            
         } catch (error) {
-            alert(error);
+            let err = null;
+            !error.message ? err = { "message": error } : err = error;
+            this.setState({
+                errors: {
+                    cognito: err
+                }
+            });
         }
-    };
+}
 
     onFinishFailed = errorInfo => {
         console.log('Failed:', errorInfo);
@@ -103,7 +106,7 @@ class Sprofile extends Component {
 
             );
         }
-        if (this.state.profileCreated || this.props.data.name != "") {
+        if (this.state.profileCreated || this.props.data.user_details.name != "") {
             return (
                 <div>
                     <div className="header">
@@ -141,7 +144,7 @@ class Sprofile extends Component {
                                                 },
                                             ]}
                                         >
-                                            <Input placeholder={this.props.data.email} />
+                                            <Input placeholder={this.props.data.user_details.email} />
                                         </Form.Item>
 
                                         <Form.Item
@@ -162,12 +165,12 @@ class Sprofile extends Component {
                                                 },
                                             ]}
                                         >
-                                            <Input placeholder={this.props.data.name}/>
+                                            <Input placeholder={this.props.data.user_details.name}/>
                                         </Form.Item>
 
                                         <Form.Item name="gender" label="Gender" rules={[{ required: true }]}>
                                             <Select
-                                                placeholder={this.props.data.gender}
+                                                placeholder={this.props.data.user_details.gender}
                                                 // onChange={this.onGenderChange}
                                                 allowClear
                                             >
@@ -177,7 +180,7 @@ class Sprofile extends Component {
                                             </Select>
                                         </Form.Item>
                                         <Form.Item name="dob" label="DOB">
-                                            <DatePicker format="YYYY-MM-DD" placeholder={this.props.data.dob}/>
+                                            <DatePicker format="YYYY-MM-DD" placeholder={this.props.data.user_details.dob}/>
                                         </Form.Item>
                                         <Form.Item label="Address">
                                             <Input.Group compact>
@@ -195,7 +198,7 @@ class Sprofile extends Component {
                                                     noStyle
                                                     rules={[{ required: true, message: 'Street is required' }]}
                                                 >
-                                                    <Input  placeholder={this.props.data.address.street} />
+                                                    <Input  placeholder={this.props.data.user_details.address.street} />
                                                 </Form.Item>
                                             </Input.Group>
                                         </Form.Item>
@@ -241,5 +244,5 @@ class Sprofile extends Component {
     }
 }; 
 
-export default connect(mapStateToProps)(Sprofile);
+export default connect(mapStateToProps,mapDispatchToProps)(Sprofile);
 

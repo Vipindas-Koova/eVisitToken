@@ -42,11 +42,6 @@ class Shopper extends Component {
         visitHistory: false,
         isLoaded: false,
         collapsed: false,
-        // session: {
-        //     accessToken: "",
-        //     idToken: "",
-        //     refreshToken: ""
-        // }
     };
 
     async componentDidMount() {
@@ -89,13 +84,7 @@ class Shopper extends Component {
 
     }
     render() {
-        // var { isLoaded } = this.props.loading;
-        // if(!isLoaded){
-        //     return <div>Loading...</div>;
-        // }
-
-
-        return (
+            return (
             <div>
                 {this.props.loading ?
                     <div>Loading...</div> :

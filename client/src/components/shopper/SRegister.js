@@ -67,7 +67,7 @@ class SRegister extends Component {
             zipcode: event
         }
         try {
-            console.log(params);
+
             const headers = {
                 'Authorization': this.props.session.idToken.jwtToken
             }
