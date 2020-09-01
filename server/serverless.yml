@@ -52,6 +52,7 @@ resources:
   - ${file(deploy/dynamodb.yml)}
   - ${file(deploy/servicerole.yml)}
   - ${file(deploy/cognito.yml)}
+  - ${file(deploy/apiauthorizer.yml)}
     
 package:
     individually: true

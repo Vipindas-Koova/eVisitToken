@@ -30,13 +30,4 @@ Resources:
       ClientName: ${self:service}-${self:provider.stage}-user-pool-client
       UserPoolId:
         Ref: CognitoUserPool
-      # ExplicitAuthFlows:
-      #   - ADMIN_NO_SRP_AUTH
-
-  # CognitoUserPoolId:
-  #   Description: "Cognito User Pool Id"
-  #   Value: $Ref CognitoUserPool
-
-  # CognitoUserPoolClientId:
-  #   Description: "Cognito User Pool Client Id"
-  #   Value: $Ref CognitoUserPoolClient
+      
