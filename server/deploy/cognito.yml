@@ -4,19 +4,23 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       UserPoolName: ${self:service}-${self:provider.stage}-user-pool
+      AliasAttributes:
+        - email
       AccountRecoverySetting:  
         RecoveryMechanisms:
           - Name: verified_email
             Priority: 1
-      UsernameAttributes:
-        - email
       Policies:
         PasswordPolicy:
-          MinimumLength: 6
-          RequireLowercase: False
+          MinimumLength: 8
+          RequireLowercase: True
           RequireNumbers: True
-          RequireSymbols: False
+          RequireSymbols: True
           RequireUppercase: True
+      VerificationMessageTemplate:
+        DefaultEmailOption: CONFIRM_WITH_LINK  # CONFIRM_WITH_LINK | CONFIRM_WITH_CODE
+        EmailMessage: 'Welcome to our app, please click the link {####}'
+        EmailSubject: 'Verification Email - App'
       UsernameConfiguration:
           CaseSensitive: True
       EmailConfiguration:     
