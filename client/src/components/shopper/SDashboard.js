@@ -5,12 +5,12 @@ import { Auth } from "aws-amplify";
 import { Row, Col, Divider } from 'antd';
 import axios from 'axios';
 import config from "../../config.json";
-import { shopper_dashboard_title, shopper_dashboard_text } from '../../constants'
+import { shopper_dashboard_title, shopper_dashboard_text,user } from '../../constants'
 import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => { 
     return {
-    data: state.data,
+    data: state.data===undefined?user:state.data,
     loading:state.loading,
     error:state.error
     }

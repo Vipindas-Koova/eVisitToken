@@ -3,12 +3,12 @@ import { Typography } from 'antd';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import config from "../../config.json";
-import { shopper_visithistory_title } from '../../constants'
+import { shopper_visithistory_title,user } from '../../constants'
 const { Title } = Typography;
 
 const mapStateToProps = (state) => { 
     return {
-    data: state.data,
+    data: state.data===undefined?user:state.data,
     loading:state.loading,
     error:state.error
     }

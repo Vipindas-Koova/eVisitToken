@@ -127,3 +127,28 @@ export const FAILURE = "FAILURE"
 export const SESSION = "SESSION"
 export const CLEAR_ESSION = "CLEAR_SESSION"
 export const CLEAR = "CLEAR"
+export var user = {dashboard: {
+    cancelled_visits: 0,
+    messages: ["Welcome"],
+    total_visits: 0,
+    upcoming_visits: 0
+  },
+  history: {
+    key: history,
+    messages: ["Welcome"]
+  },
+  pk: "amarn19",
+  sk: "shopper",
+  type: "user",
+  user_details: {
+    address: {
+      province: "",
+      street: ""
+    },
+    dob: "",
+    email: "",
+    gender: "",
+    key: "",
+    name: "",
+    phoneno: ""
+  }}

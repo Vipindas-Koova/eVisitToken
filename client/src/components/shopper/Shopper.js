@@ -16,10 +16,10 @@ import {
     EditOutlined,
     HistoryOutlined,
 } from '@ant-design/icons';
-import { shopper_menu, footer_text, image_failed, logout_button } from '../../constants'
+import { shopper_menu, footer_text, image_failed, logout_button,user } from '../../constants'
 
 const { Header, Content, Footer, Sider } = Layout;
-var user = {}
+
 const mapStateToProps = (state) => {
     return {
         data: state.data,

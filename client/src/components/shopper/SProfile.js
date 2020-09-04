@@ -7,13 +7,13 @@ import axios from 'axios';
 import config from "../../config.json";
 import Avatar from "../utility/Avatar";
 import {QuestionCircleOutlined} from '@ant-design/icons';
-import {shopper_profile_title,shopper_profile_text,profile_createbutton,profile_savebutton,citynames} from '../../constants';
+import {shopper_profile_title,shopper_profile_text,profile_createbutton,profile_savebutton,citynames,user} from '../../constants';
 const { Title } = Typography;
 import { updateRecord,fetchUser } from '../redux/auth/authAction';
 
 const mapStateToProps = (state) => { 
     return {
-    data: state.data,
+    data: state.data===undefined?user:state.data,
     loading:state.loading,
     error:state.error
     }

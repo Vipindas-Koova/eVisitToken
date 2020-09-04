@@ -9,7 +9,7 @@ import axios from 'axios';
 import * as Constants from '../../constants'
 
 class Register extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
     }
     params = {}
@@ -58,7 +58,11 @@ class Register extends React.Component {
                         total_visits: 1,
                         upcoming_visits: 2,
                     },
-                    history: []
+                    history: {
+                    messages: [
+                      "Welcome"
+                    ]
+                }
                 }
             }
             else if (this.state.type == 'store_owner') {
@@ -114,7 +118,7 @@ class Register extends React.Component {
                     cognito: err
                 }
             });
-            
+
         }
     }
     handleSubmit = async (event) => {
@@ -140,7 +144,10 @@ class Register extends React.Component {
                     attributes: {
                         email: email
                     }
-                });
+                })
+                .then(
+                    this.createUserItem(username)
+                );
                 window.location.href = '/signupverification';
                 console.log(signUpResponse);
             } catch (error) {

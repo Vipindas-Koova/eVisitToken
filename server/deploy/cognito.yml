@@ -6,6 +6,8 @@ Resources:
       UserPoolName: ${self:service}-${self:provider.stage}-user-pool
       AliasAttributes:
         - email
+      AutoVerifiedAttributes:
+        - email
       AccountRecoverySetting:  
         RecoveryMechanisms:
           - Name: verified_email
@@ -34,4 +36,11 @@ Resources:
       ClientName: ${self:service}-${self:provider.stage}-user-pool-client
       UserPoolId:
         Ref: CognitoUserPool
+
+  CognitoUserPoolDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    Properties:
+      Domain: ${self:service}-${opt:stage,self:provider.stage} # what is before .auth.REGION.amazoncognito.com
+      UserPoolId:
+        Ref: CognitoUserPool # given the name of your resource
       

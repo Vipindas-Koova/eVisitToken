@@ -4,20 +4,20 @@
   },
   "cognito": {
     "REGION": "us-east-1",
-    "USER_POOL_ID": "us-east-1_kkcJCu4rZ",
-    "APP_CLIENT_ID": "78ca9baaqt79pnrob7o3vot1kq"
+    "USER_POOL_ID": "us-east-1_ZLmjBgJhF",
+    "APP_CLIENT_ID": "6e5le2g70qcjbs7ok6un39qbel"
   },
   "lambda_api":{
     "dev":{
-      "fetchUser":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/fetch",
-      "createUser":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/register",
-      "getStores":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/getStores",
-      "createStoreProfile":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/registerStore",
-      "updateRecord":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/updateRecord",
-      "createSlots":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/createSlot",
-      "bookSlot":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/bookSlot",
-      "checkSlot":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/checkSlot",
-      "userBooking":"https://2a931087o1.execute-api.us-east-1.amazonaws.com/development/user/userBooking"
+      "fetchUser":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/fetch",
+      "createUser":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/register",
+      "getStores":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/getStores",
+      "createStoreProfile":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/registerStore",
+      "updateRecord":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/updateRecord",
+      "createSlots":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/createSlot",
+      "bookSlot":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/bookSlot",
+      "checkSlot":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/checkSlot",
+      "userBooking":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/userBooking"
     }
   }
 }

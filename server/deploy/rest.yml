@@ -11,6 +11,17 @@
             request:
               schema:
                 application/json: ${file(src/schema/createUser_request.json)}
+  
+  uploadImage:
+      handler: src/functions/imageUpload.imageUpload
+      description: POST /user/uploadimg
+      events:
+        - http:
+            method: post
+            path: /user/uploadimg
+            cors:
+              origin: "*"
+              headers: ${self:custom.allowedHeaders}
 
   createUserBooking:
     handler: src/functions/createUserBooking.createUserBooking

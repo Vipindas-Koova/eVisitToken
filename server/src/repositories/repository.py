@@ -7,9 +7,12 @@ from botocore.exceptions import ClientError
 
 # dynamodb instance creation
 dynamodb = boto3.resource('dynamodb')
+# S3 instance creation
+s3 = boto3.resource('s3')
 # fetching dynamodb table
 etoken_table = dynamodb.Table(os.environ['ETOKEN_TABLE'])
 DynamoDBStreamTable = dynamodb.Table(os.environ['DynamoDBStream'])
+s3Bucket = s3.Bucket(os.environ['imageUploadBucket'])
 # Logger configuration
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -154,6 +157,14 @@ def logEvent(item):
         response = DynamoDBStreamTable.put_item(
             Item=item
         )
+    except (ClientError, KeyError) as e:
+            raise
+    return response
+
+def imgUpload(item):
+    logger.info("uploading image")
+    try:
+        response = s3Bucket.put_object(item)
     except (ClientError, KeyError) as e:
             raise
     return response

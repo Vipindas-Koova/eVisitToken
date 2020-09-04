@@ -32,6 +32,8 @@ custom:
         description: 'Lambda DataSource'
         config:
           functionName: graphql
+  
+  imageUploadBucket: ${self:service}-profile-images
 
 provider:
   name: aws
@@ -45,11 +47,13 @@ provider:
   environment:
     ETOKEN_TABLE: ${self:service}-${opt:stage,self:provider.stage}
     DynamoDBStream: ${self:service}-events-${opt:stage,self:provider.stage}
+    imageUploadBucket: ${self:custom.imageUploadBucket}
 
 functions:
   - ${file(deploy/rest.yml)}
 resources:
   - ${file(deploy/dynamodb.yml)}
+  - ${file(deploy/s3.yml)}
   - ${file(deploy/servicerole.yml)}
   - ${file(deploy/cognito.yml)}
   - ${file(deploy/apiauthorizer.yml)}
@@ -71,3 +75,12 @@ package:
     - ./handler.py
     - deploy/**
     - src/**
+
+Outputs:
+  UserPoolId:
+    Value:
+      Ref: CognitoUserPool
+
+  UserPoolClientId:
+    Value:
+      Ref: CognitoUserPoolClient

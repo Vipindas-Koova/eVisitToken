@@ -6,7 +6,7 @@ import { Row, Col} from 'antd';
 import axios from 'axios';
 import config from "../../config.json";
 import { Select } from 'antd';
-import { shopper_register_title, shopper_register_headings, shopper_bookbutton } from '../../constants';
+import { shopper_register_title, shopper_register_headings, shopper_bookbutton,user } from '../../constants';
 import moment from 'moment';
 import { connect } from 'react-redux';
 const { Title, Text } = Typography;
@@ -14,7 +14,7 @@ const { Search } = Input;
 
 const mapStateToProps = (state) => { 
     return {
-    data: state.data,
+    data: state.data===undefined?user:state.data,
     loading:state.loading,
     error:state.error
     }
