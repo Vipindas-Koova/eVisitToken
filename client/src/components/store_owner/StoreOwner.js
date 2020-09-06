@@ -18,13 +18,12 @@ import SOstoreprofile from './SOStoreProfile';
 import SOschedule from './SOSchedule';
 import SOaunnouncement from './SOAunnouncement';
 
-import { storeowner_menu, footer_text, logout_button, image_failed } from '../../constants'
+import { storeowner_menu, footer_text, logout_button, image_failed, user } from '../../constants'
 const { Header, Content, Footer, Sider } = Layout;
-var user = {}
 
 const mapStateToProps = (state) => {
     return {
-        data: state.data,
+        data: state.data === undefined ? user : state.data,
         loading: state.loading,
         error: state.error
     }
@@ -53,17 +52,27 @@ class StoreOwner extends Component {
     };
 
     async componentDidMount() {
-        console.log("Store Owner onload");
-        await Auth.currentSession().then(res => {
-            this.setState({
-                session: {
-                    accessToken: res.getAccessToken(),
-                    idToken: res.getIdToken()
-                }
-            })
-        })
+        if (!this.props.isAuthenticated) {
+            console.log("true")
+            this.props.history.push({ pathname: '/' });
+        }
+        else{
+            try {
+                console.log("Store Owner onload");
+                await Auth.currentSession().then(res => {
+                    this.setState({
+                        session: {
+                            accessToken: res.getAccessToken(),
+                            idToken: res.getIdToken()
+                        }
+                    })
+                })
+            } catch (e) {
+                alert(e);
+            }
+    
     }
-
+    }
     handleLogOut = async event => {
         event.preventDefault;
         try {
@@ -93,51 +102,56 @@ class StoreOwner extends Component {
     render() {
         return (
             <div>
-                {this.props.loading ?
-                    <div>Loading...</div> :
-                    <Layout className="user_layout">
+                {this.props.isAuthenticated ?
+                    <div>
+                        {this.props.loading ?
+                            <div>Loading...</div> :
+                            <Layout className="user_layout">
 
-                        <Header className="header">
-                            <div className="logo-title">
-                                <img src="/images/etoken-logo.png" className="logo-image" alt={image_failed} />
-                            </div>
-                            {this.props.auth.isAuthenticated && (
-                                <Link to="/"><Button className="Signin-button" onClick={this.handleLogOut} type="primary" icon={<LogoutOutlined />}>{logout_button}</Button></Link>
-
-                            )}
-
-                        </Header>
-
-                        <Layout>
-                            <Sider width={200} collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-                                <Menu theme="dark" defaultSelectedKeys={['0']} mode="inline">
-                                    <Menu.Item key="0" icon={<DesktopOutlined />} onClick={this.onHandleContent}>{storeowner_menu[0]}</Menu.Item>
-                                    <Menu.Item key="1" icon={<UserOutlined />} onClick={this.onHandleContent}>{storeowner_menu[1]}</Menu.Item>
-                                    <Menu.Item key="2" icon={<UserOutlined />} onClick={this.onHandleContent}>{storeowner_menu[2]}</Menu.Item>
-                                    <Menu.Item key="3" icon={< EditOutlined />} onClick={this.onHandleContent}>{storeowner_menu[3]}</Menu.Item>
-                                    <Menu.Item key="4" icon={<HistoryOutlined />} onClick={this.onHandleContent}>{storeowner_menu[4]}</Menu.Item>
-                                </Menu>
-                            </Sider>
-
-                            <Layout >
-                                <Content id="content-page" className="user_content_margin">
-                                    <div >
-                                        {this.state.dashboard && <SOdashboard session={this.state.session} />}
-                                        {this.state.profile && <SOprofile session={this.state.session} />}
-                                        {this.state.store_profile && <SOstoreprofile session={this.state.session} />}
-                                        {this.state.schedule && <SOschedule session={this.state.session} />}
-                                        {this.state.aunnouncement && <SOaunnouncement session={this.state.session} />}
+                                <Header className="header">
+                                    <div className="logo-title">
+                                        <img src="/images/etoken-logo.png" className="logo-image" alt={image_failed} />
                                     </div>
+                                    {this.props.auth.isAuthenticated && (
+                                        <Link to="/"><Button className="Signin-button" onClick={this.handleLogOut} type="primary" icon={<LogoutOutlined />}>{logout_button}</Button></Link>
 
-                                </Content>
-                                <Footer className="footer_user">{footer_text}</Footer>
+                                    )}
+
+                                </Header>
+
+                                <Layout>
+                                    <Sider width={200} collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+                                        <Menu theme="dark" defaultSelectedKeys={['0']} mode="inline">
+                                            <Menu.Item key="0" icon={<DesktopOutlined />} onClick={this.onHandleContent}>{storeowner_menu[0]}</Menu.Item>
+                                            <Menu.Item key="1" icon={<UserOutlined />} onClick={this.onHandleContent}>{storeowner_menu[1]}</Menu.Item>
+                                            <Menu.Item key="2" icon={<UserOutlined />} onClick={this.onHandleContent}>{storeowner_menu[2]}</Menu.Item>
+                                            <Menu.Item key="3" icon={< EditOutlined />} onClick={this.onHandleContent}>{storeowner_menu[3]}</Menu.Item>
+                                            <Menu.Item key="4" icon={<HistoryOutlined />} onClick={this.onHandleContent}>{storeowner_menu[4]}</Menu.Item>
+                                        </Menu>
+                                    </Sider>
+
+                                    <Layout >
+                                        <Content id="content-page" className="user_content_margin">
+                                            <div >
+                                                {this.state.dashboard && <SOdashboard session={this.state.session} />}
+                                                {this.state.profile && <SOprofile session={this.state.session} />}
+                                                {this.state.store_profile && <SOstoreprofile session={this.state.session} />}
+                                                {this.state.schedule && <SOschedule session={this.state.session} />}
+                                                {this.state.aunnouncement && <SOaunnouncement session={this.state.session} />}
+                                            </div>
+
+                                        </Content>
+                                        <Footer className="footer_user">{footer_text}</Footer>
+
+                                    </Layout>
+
+                                </Layout>
 
                             </Layout>
+                        }
+                    </div>
 
-                        </Layout>
-
-                    </Layout>
-                }
+                    : () => this.props.history.push({ pathname: '/' })}
             </div>
         );
     }

@@ -6,7 +6,7 @@ import { Row, Col } from 'antd';
 import axios from 'axios';
 import config from "../../config.json";
 import moment from 'moment';
-import {scheduler_title,scheduler_sub_title,allot_button} from '../../constants'
+import {scheduler_title,scheduler_sub_title,allot_button,user} from '../../constants'
 const { Title } = Typography;
 const format = 'HH:mm';
 const dateFormat = 'YYYY/MM/DD';
@@ -15,7 +15,7 @@ import { createSlots,fetchUser } from '../redux/auth/authAction';
 
 const mapStateToProps = (state) => {
     return {
-        data: state.data,
+        data: state.data===undefined?user:state.data,
         loading: state.loading,
         error: state.error
     }

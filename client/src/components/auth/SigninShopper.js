@@ -80,6 +80,7 @@ class SigninShopper extends Component {
                 .then(response => {
                     var idToken = response.signInUserSession.idToken.jwtToken;
                     this.fetchUser(idToken, event.username);
+                    this.props.auth.setAuthStatus(true);
                     console.log("executing test")
                     this.routeShopper("shopper");
                 })

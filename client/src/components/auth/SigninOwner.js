@@ -69,6 +69,7 @@ class SigninOwner extends Component {
             await Auth.signIn(event.username, event.password)
                 .then(response => {
                     var idToken = response.signInUserSession.idToken.jwtToken;
+                    this.props.auth.setAuthStatus(true);
                     this.fetchUser(idToken, event.username);
                     console.log("executing test")
                     this.routeShopper("storeowner");

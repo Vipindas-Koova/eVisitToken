@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { store,persistor } from './components/redux/redux';
+import { store, persistor } from './components/redux/redux';
 import AppRouter from './appRouter/AppRouter';
 import './styles/style.scss';
 import 'normalize.css/normalize.css';
@@ -8,11 +8,28 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react'
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      isAuthenticated: false,
+      isAuthenticating: true,
+      user: null
+    };
+  }
 
-  state = {
-    isAuthenticated: false,
-    isAuthenticating: true,
-    user: null
+  async componentDidMount() {
+    try {
+      if (await Auth.currentSession()) {
+        this.setAuthStatus(true);
+        const user = await Auth.currentAuthenticatedUser();
+        this.setUser(user);
+      }
+    } catch (error) {
+      if (error !== 'No current user') {
+        alert(error);
+      }
+    }
+    this.setState({ isAuthenticating: false });
   }
 
   setAuthStatus = authenticated => {
@@ -23,26 +40,11 @@ class App extends Component {
     this.setState({ user: user });
   }
 
-  async componentDidMount() {
-    try {
-      const session = await Auth.currentSession();
-      this.setAuthStatus(true);
-      const user = await Auth.currentAuthenticatedUser();
-      this.setUser(user);
-    } catch (error) {
-      if (error !== 'No current user') {
-        console.log(error);
-      }
-    }
-
-    this.setState({ isAuthenticating: false });
-  }
-
   render() {
     const authProps = {
       isAuthenticated: this.state.isAuthenticated,
-      user: this.state.user,
       setAuthStatus: this.setAuthStatus,
+      user: this.state.user,
       setUser: this.setUser
     }
     return (

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Typography } from 'antd';
 import { Row, Col } from 'antd';
-import { shopper_dashboard_title, shopper_dashboard_text } from '../../constants';
+import { shopper_dashboard_title, shopper_dashboard_tex,user } from '../../constants';
 import { connect } from 'react-redux';
 const { Title } = Typography;
 
 const mapStateToProps = (state) => { 
     return {
-    data: state.data,
+    data: state.datastate.data===undefined?user:state.data,
     loading:state.loading,
     error:state.error
     }

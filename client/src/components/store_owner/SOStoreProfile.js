@@ -12,14 +12,15 @@ import {
     store_profile_title,
     store_profile_text,
     citynames,
-    profile_savebutton
+    profile_savebutton,
+    user
 } from '../../constants'
 const { Title } = Typography;
 import { updateRecord,fetchUser,createStore} from '../redux/auth/authAction';
 
 const mapStateToProps = (state) => {
     return {
-        data: state.data,
+        data: state.data===undefined?user:state.data,
         loading: state.loading,
         error: state.error
     }

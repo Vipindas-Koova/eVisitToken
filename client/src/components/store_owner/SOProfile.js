@@ -6,12 +6,12 @@ const { Title } = Typography;
 import { Row, Col} from 'antd';
 import Avatar from "../utility/Avatar";
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { shopper_profile_title, shopper_profile_text, profile_createbutton, profile_savebutton, citynames } from '../../constants';
+import { shopper_profile_title, shopper_profile_text, profile_createbutton, profile_savebutton, citynames ,user} from '../../constants';
 import { updateRecord,fetchUser } from '../redux/auth/authAction';
 
 const mapStateToProps = (state) => {
     return {
-        data: state.data,
+        data: state.data===undefined?user:state.data,
         loading: state.loading,
         error: state.error
     }

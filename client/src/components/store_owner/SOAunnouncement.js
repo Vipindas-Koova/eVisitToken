@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form, Input, Button, Card } from 'antd';
-import { post_button } from '../../constants'
+import { post_button,user } from '../../constants'
 import { updateRecord,fetchUser } from '../redux/auth/authAction';
-const { TextArea } = Input;
+const { TextArea} = Input;
 
 const mapStateToProps = (state) => {
     return {
-        data: state.data,
+        data: state.data===undefined?user:state.data,
         loading: state.loading,
         error: state.error
     }
