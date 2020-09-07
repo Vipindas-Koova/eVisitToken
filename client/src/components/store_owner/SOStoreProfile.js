@@ -61,9 +61,9 @@ const mapDispatchToProps = dispatch => {
             'Authorization': this.props.session.idToken.jwtToken
         }
         var params = {
-            pk: values.store_zipcode,
-            sk: values.store_name,
-            slots: {},
+            zipcode: values.store_zipcode,
+            store_name: values.store_name,
+            slots: {key:"slots"},
             store_details: {
                 email: values.store_email,
                 establishedon: values.establishedon,
@@ -107,7 +107,7 @@ const mapDispatchToProps = dispatch => {
         }
         //calling createstore api
         try {
-            if (!this.state.profileCreated) {
+            if (this.props.data.store_details.zipcode == "") {
                 console.log("calling create profile api");
                 this.props.createStore(params,headers);
             }
@@ -140,14 +140,14 @@ const mapDispatchToProps = dispatch => {
                 sk:this.props.data.sk
             }
         })
-        if (this.props.data.store_details.zipcode) {
+        if (this.props.data.store_details.zipcode=="") {
             this.setState({
-                profileCreated: true
+                profileCreated: false
             });
         }
     }
     render() {
-        if (!this.state.profileCreated) {
+        if (!this.state.profileCreated && this.props.data.store_details.zipcode == "") {
             return (
                 <Card title={store_profile_text[0]} className="user_profile_card" bordered={true}>
                     <Button type="primary" onClick={this.handleCreate}>{profile_createbutton}</Button>
@@ -155,7 +155,7 @@ const mapDispatchToProps = dispatch => {
 
             );
         }
-        else {
+        if (this.state.profileCreated || this.props.data.store_details.zipcode != ""){
             return (
                 <div>
                     <div className="header">
@@ -227,7 +227,7 @@ const mapDispatchToProps = dispatch => {
                                                     noStyle
                                                     rules={[{ required: true, message: 'Province is required' }]}
                                                 >
-                                                    <Select placeholder={this.props.data.user_details.address.province} >
+                                                    <Select placeholder={this.props.data.store_details.address.province} >
                                                         {citynames.map(name => (<Select.Option key={name}>{name}</Select.Option>))}
                                                     </Select>
                                                 </Form.Item>
@@ -236,7 +236,7 @@ const mapDispatchToProps = dispatch => {
                                                     noStyle
                                                     rules={[{ required: true, message: 'Street is required' }]}
                                                 >
-                                                    <Input placeholder="Input street" placeholder={this.props.data.user_details.address.street}  />
+                                                    <Input placeholder="Input street" placeholder={this.props.data.store_details.address.street}  />
                                                 </Form.Item>
                                             </Input.Group>
                                         </Form.Item>

@@ -30,6 +30,18 @@ const mapDispatchToProps = dispatch => {
 }
 
 class SOSchedule extends Component {
+    layout = {
+        labelCol: { span: 10 },
+        wrapperCol: { span: 4 },
+    };
+    tailLayout = {
+        wrapperCol: { offset: 10, span: 4 },
+    };
+    state = {
+        storeDetails: {},
+        disabled: true,
+        timeslots: []
+    }
     Toast(props) {
         var name = "Toast Toast--success";
         return (
@@ -50,19 +62,13 @@ class SOSchedule extends Component {
         }
         return dateArray;
     }
-    layout = {
-        labelCol: { span: 10 },
-        wrapperCol: { span: 4 },
-    };
-    tailLayout = {
-        wrapperCol: { offset: 10, span: 4 },
-    };
-    state = {
-        storeDetails: {},
-        disabled: true,
-        timeslots: []
-    }
+    
     onFinish = async (fieldsValue) => {
+        if(this.props.data.store_details.zipcode=="")
+        {
+            alert("Create store profile prior slot creation")
+        }
+        else{
         const rangeValue = fieldsValue['slot_date'];
         const values = {
             ...fieldsValue,
@@ -108,12 +114,15 @@ class SOSchedule extends Component {
             });
         }
         console.log(this.state.timeslots)
-
+    }
     }
 
     onFinishFailed = errorInfo => {
         console.log('Failed:', errorInfo);
     };
+    componentDidMount(){
+        
+    }
     render() {
         return (
             <div>
@@ -124,11 +133,11 @@ class SOSchedule extends Component {
                     <Title level={4} >{scheduler_sub_title[0]}</Title>
                 </Row>
                 <Row>
-                    <Col span={12}>
+                    <Col span={8}>
                         <div className="user_profile_card">
                             <Form
-                                labelCol={{ span: 10 }}
-                                wrapperCol={{ span: 14 }}
+                                labelCol={{ span: 8 }}
+                                wrapperCol={{ span: 16 }}
                                 layout="horizontal"
                                 name="schdule"
                                 scrollToFirstError
@@ -164,11 +173,14 @@ class SOSchedule extends Component {
                             </Form>
                         </div>
                     </Col>
-                    <Col span={12}>
+                    <Col span={16}>
                         <div>
                             <Card title={scheduler_sub_title[1]} bordered={true}>
-                                {this.state.timeslots.map((msg, i) => (
+                                {/* {this.state.timeslots.map((msg, i) => (
                                     <this.Toast key={i} message={msg} />
+                                ))} */}
+                                {Object.keys(this.props.data.slots).map((i) => (
+                                    <this.Toast key={i} message={i} />
                                 ))}
                             </Card>
                         </div>

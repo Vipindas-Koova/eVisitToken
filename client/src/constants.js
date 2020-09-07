@@ -105,7 +105,7 @@ export const shopper_visithistory_title = "Bookings History"
 //storeowner
 export const storeowner_menu = [ "Dashboard", "Profile", "Store Profile", "Schedule", "Announcement"]
 export const store_profile_title = "Store Profile"
-export const store_profile_text = ["Welcome. Create User Profile","Store Pictures"]
+export const store_profile_text = ["Welcome. Create Store Profile","Store Pictures"]
 export const citynames = ["Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware",
 "Florida", "Georgia", "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
 "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey", "New Mexico",

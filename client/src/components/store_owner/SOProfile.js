@@ -143,6 +143,11 @@ class SOProfile extends Component {
                 sk: this.props.data.sk
             }
         })
+        if (this.props.data.user_details.name == "") {
+            this.setState({
+                profileCreated: false
+            });
+        }
     }
     render() {
         if (!this.state.profileCreated && this.props.data.user_details.name == "") {

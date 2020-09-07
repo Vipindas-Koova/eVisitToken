@@ -93,7 +93,9 @@ class Register extends React.Component {
                         total_visits: 1,
                         upcoming_visits: 2
                     },
-                    messages: []
+                    messages: {
+                        messages:[]
+                    }
 
                 }
             }

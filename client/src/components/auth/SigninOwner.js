@@ -13,7 +13,6 @@ const { Header, Footer } = Layout;
 
 const mapStateToProps = (state) => {
     return {
-        type: state.data.sk || false,
         loading: state.loading
     }
 };
@@ -42,6 +41,8 @@ class SigninOwner extends Component {
                 'Authorization': idToken
             }
             this.props.fetchUserDetails(params, headers);
+            this.props.auth.setAuthStatus(true);
+            await this.routeStoreOwner("storeowner");
         } catch (error) {
             let err = null;
             !error.message ? err = { "message": error } : err = error;
@@ -52,7 +53,7 @@ class SigninOwner extends Component {
             });
         }
     }
-    routeShopper = (shopper) => {
+    routeStoreOwner = (type) => {
         this.props.history.push({ pathname: '/storeowner' });
     }
 
@@ -69,10 +70,7 @@ class SigninOwner extends Component {
             await Auth.signIn(event.username, event.password)
                 .then(response => {
                     var idToken = response.signInUserSession.idToken.jwtToken;
-                    this.props.auth.setAuthStatus(true);
                     this.fetchUser(idToken, event.username);
-                    console.log("executing test")
-                    this.routeShopper("storeowner");
                 })
         } catch (error) {
             let err = null;
@@ -172,7 +170,7 @@ class SigninOwner extends Component {
                 </div>
 
                 <Footer className="footer">{Constants.footer_text}</Footer>
-            </Layout >
+            </Layout>
         );
     }
 };

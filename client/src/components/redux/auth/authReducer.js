@@ -16,7 +16,7 @@ const rootReducer = (state = initialState, action) => {
     switch (action.type) {
         case REQUEST: return {...state,loading:true}
         case SUCCESS: return {...state,loading: false, data:action.payload,error:'test error'}
-        case FAILURE: return {...state,loading: false, data:{},error:action.payload}
+        case FAILURE: return {...state,loading: false,error:action.payload}
         case CLEAR: { storage.removeItem('persist:root');
                     return {state:initialState}}
         // case REGISTER_USER: return {

@@ -52,8 +52,7 @@ class StoreOwner extends Component {
     };
 
     async componentDidMount() {
-        if (!this.props.isAuthenticated) {
-            console.log("true")
+        if (!this.props.auth.isAuthenticated) {
             this.props.history.push({ pathname: '/' });
         }
         else{
@@ -102,7 +101,7 @@ class StoreOwner extends Component {
     render() {
         return (
             <div>
-                {this.props.isAuthenticated ?
+                {this.props.auth.isAuthenticated ?
                     <div>
                         {this.props.loading ?
                             <div>Loading...</div> :

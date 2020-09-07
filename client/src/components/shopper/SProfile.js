@@ -95,10 +95,15 @@ class Sprofile extends Component {
                 sk:this.props.data.sk
             }
         })
+        if (this.props.data.user_details.name == "") {
+            this.setState({
+                profileCreated: false
+            });
+        }
     }   
 
     render() {
-        if (!this.state.profileCreated && this.props.data.user_details.name == "") {
+        if (!this.state.profileCreated&&this.props.data.user_details.name == "") {
             return (
                 <Card title={shopper_profile_text[0]} className="user_profile_card" bordered={true}>
                     <Button type="primary" onClick={this.handleCreate}>{profile_createbutton}</Button>
