@@ -152,7 +152,7 @@ class SigninOwner extends Component {
                             </div>
                             <FormErrors formerrors={this.state.errors} />
                             <Form.Item>
-                                <Button type="danger" href="" className="login-form-button">{Constants.login_button}</Button>
+                                <Button type="danger" htmlType="submit" className="login-form-button">{Constants.login_button}</Button>
                             </Form.Item>
 
                             <Form.Item>
