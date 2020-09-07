@@ -5,6 +5,7 @@ import PopUpModal from './utility/PopUpModal';
 import { Typography, Button, Layout, Row, Col } from 'antd';
 import { LogoutOutlined } from '@ant-design/icons';
 import *  as Constants from '../constants';
+import LandingFooter from "./footer";
 
 const { Header, Footer, Content } = Layout;
 const { Title, Text } = Typography;
@@ -54,9 +55,9 @@ export default class Homepage extends React.Component {
         <Content>
           <div className="about">
             <div className="container">
-              <div className="product-desc wht_fnt" >
-                <Title level={1} className="txt-center">{Constants.why_etoken_title}</Title>
-                <Row>
+              <div className="product-desc" >
+                <Title level={1} className="txt-center wht_fnt">{Constants.why_etoken_title}</Title>
+                <Row className="wht_fnt">
                   <Col span={6} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }}>
                     <ul  >
                       <li>{Constants.why_etoken_text[0]}</li>
@@ -92,11 +93,11 @@ export default class Homepage extends React.Component {
         </Content>
         <Content>
           <div className="usecase">
-            <div className="product-desc wht_fnt" >
-              <Title level={1} className="txt-center">{Constants.service_impl_title[0]}</Title>
-              <Row >
+            <div className="product-desc" >
+              <Title level={1} className="txt-center wht_fnt">{Constants.service_impl_title[0]}</Title>
+              <Row className="wht_fnt">
                 <Col span={18} xs={{ span: 24, order: 2 }} sm={{ span: 12, order: 1 }} lg={{ span: 18 }}    >
-                  <Title level={4} >{Constants.service_impl_title[1]}</Title>
+                  <Title className="wht_fnt" level={4} >{Constants.service_impl_title[1]}</Title>
                   <p>{Constants.service_impl_text[0]}</p>
                   <p>{Constants.service_impl_text[1]}</p>
                 </Col>
@@ -105,21 +106,21 @@ export default class Homepage extends React.Component {
                 </Col>
               </Row>
               <div className="pad"></div>
-              <Row >
+              <Row className="wht_fnt">
                 <Col span={6} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 6 }}>
                   <img src="/images/holy-place.jpg" className="services_image" alt={Constants.image_failed} />
                 </Col>
 
                 <Col span={18} xs={{ span: 24 }} sm={{ span: 24 }} md={{ span: 12 }} lg={{ span: 18 }}  >
-                  <Title level={4} >{Constants.service_impl_title[2]}</Title>
+                  <Title className="wht_fnt" level={4} >{Constants.service_impl_title[2]}</Title>
                   <p>{Constants.service_impl_text[2]}</p>
                   <p>{Constants.service_impl_text[3]}</p>
                 </Col>
               </Row>
               <div className="pad"></div>
-              <Row >
+              <Row className="wht_fnt">
                 <Col span={18} xs={{ span: 24, order: 2 }} sm={{ span: 12, order: 1 }} lg={{ span: 18 }}  >
-                  <Title level={4} >{Constants.service_impl_title[3]}</Title>
+                  <Title className="wht_fnt" level={4} >{Constants.service_impl_title[3]}</Title>
                   <p>{Constants.service_impl_text[4]}</p>
                   <p>{Constants.service_impl_text[5]}</p>
                   <p>{Constants.service_impl_text[6]}</p>
@@ -133,7 +134,8 @@ export default class Homepage extends React.Component {
 
           </div>
         </Content>
-        <Footer className="footer">{Constants.footer_text}</Footer>
+        {/* <Footer className="footer">{Constants.footer_text}</Footer> */}
+        <LandingFooter></LandingFooter>
         <PopUpModal popup={this.state.popup} closeModal={this.handleCloseModal} terms={this.state.terms} />
       </Layout>
 

@@ -112,7 +112,14 @@ export const citynames = ["Alabama", "Alaska", "Arizona", "Arkansas", "Californi
 ]
 export const scheduler_title = "Visit Scheduler"
 export const scheduler_sub_title = ["Shpping Timings","Available Slots"]
-
+export const footer_title = "E-Token System © 2018 Created by NitorInfotech"
+export const footer_links = ["About Us",
+    "Partners",
+    "Policies",
+    "FAQs",
+    "Careers",
+    "Contact Us",
+    "Follow Us"]
 //actions
 export const REGISTER_USER = "REGISTER_USER"
 export const LOGIN_USER = "LOGIN_USER"
