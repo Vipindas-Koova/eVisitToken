@@ -1,6 +1,8 @@
 export const image_failed = "Loading failed"
 export const footer_text = "E-Token System©2018 Created by NitorInfotech"
 export const login_button = "Log in"
+export const fb_login = "Login with Facebook"
+export const gmail_login  = "Login with Google"
 export const logout_button = "Logout"
 export const  post_button = "Save"
 export const allot_button = "Allot"

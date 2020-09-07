@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Form, Input, Button, Checkbox, Layout } from 'antd';
-import { UserOutlined, LockOutlined, EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { UserOutlined, LockOutlined, EyeInvisibleOutlined, EyeTwoTone,FacebookOutlined,GoogleOutlined} from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Typography } from 'antd';
 import { Auth } from "aws-amplify";
@@ -152,7 +152,19 @@ class SigninOwner extends Component {
                             </div>
                             <FormErrors formerrors={this.state.errors} />
                             <Form.Item>
-                                <Button type="danger" htmlType="submit" className="login-form-button">{Constants.login_button}</Button>
+                                <Button type="danger" href="" className="login-form-button">{Constants.login_button}</Button>
+                            </Form.Item>
+
+                            <Form.Item>
+                                <Button 
+                                type="primary" href="" className="login-form-button"
+                                icon={<FacebookOutlined />}>{Constants.fb_login}</Button>
+                            </Form.Item>
+                            <Form.Item>
+
+                                <Button 
+                                type="success" className="login-form-button"
+                                icon={<GoogleOutlined />}>{Constants.gmail_login}</Button>
                             Or  <Link to="/signup">{Constants.register}</Link>
                             </Form.Item>
                         </Form>
@@ -160,7 +172,7 @@ class SigninOwner extends Component {
                 </div>
 
                 <Footer className="footer">{Constants.footer_text}</Footer>
-            </Layout>
+            </Layout >
         );
     }
 };
