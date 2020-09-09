@@ -2,15 +2,15 @@ This project is on serverless web application hosted on AWS.
 Client application frontend is built on React,Nodejs.
 Server backend application has python and GraphQL implemntations.
 
-Steps to run the project:
-1.Clone the project to local system.
-2.Navigate to server folder and install serverless framework (npm install serverless).
-3.Configure AWS secrets in env folder.
-4.Run sls deploy in cmd to deploy serverless application.
-5.Once deployed copy the endpoints and configure in client config.js
-6.Navigate to AWS Cognito console and copy the pool,client ids.
-7.Configure above ids in client config.js
-8.Run npm run dev-server to start the application
+Steps to run the project:<br />
+1.Clone the project to local system.<br />
+2.Navigate to server folder and install serverless framework (npm install serverless).<br />
+3.Configure AWS secrets in env folder.<br />
+4.Run sls deploy in cmd to deploy serverless application.<br />
+5.Once deployed copy the endpoints and configure in client config.js<br />
+6.Navigate to AWS Cognito console and copy the pool,client ids.<br />
+7.Configure above ids in client config.js<br />
+8.Run npm run dev-server to start the application<br />
 
 Application run on port 8080 by default.
 
