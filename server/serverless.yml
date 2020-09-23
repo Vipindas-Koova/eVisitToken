@@ -1,7 +1,7 @@
 
 org: amarn19
 app: etoken
-service: etoken
+service: etokenDocker
 
 plugins:
   - serverless-pseudo-parameters
@@ -76,11 +76,11 @@ package:
     - deploy/**
     - src/**
 
-Outputs:
-  UserPoolId:
-    Value:
-      Ref: CognitoUserPool
+# Outputs:
+#   UserPoolId:
+#     Value:
+#       Ref: CognitoUserPool
 
-  UserPoolClientId:
-    Value:
-      Ref: CognitoUserPoolClient
+#   UserPoolClientId:
+#     Value:
+#       Ref: CognitoUserPoolClient

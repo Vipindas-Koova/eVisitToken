@@ -3,9 +3,6 @@ import { Upload } from 'antd';
 import ImgCrop from 'antd-img-crop';
 
 const Avatar = (props) => {
-  const shopper=true;
-  const store_owner=false;
-  const store=false;
   const [fileList, setFileList] = useState([
     {
       uid: '-1',
@@ -43,9 +40,9 @@ const Avatar = (props) => {
         fileList={fileList}
         onChange={onChange}
         onPreview={onPreview}
-        
+        data={(file) => file.name = props.profile.pk}
       >
-        {fileList.length < 1 && '+ Upload'}
+        {props.profile.sk=="shopper"?fileList.length < 1 && '+ Upload':fileList.length < 4 && '+ Upload'}
       </Upload>
     </ImgCrop>
   );
