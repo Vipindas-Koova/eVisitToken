@@ -3,6 +3,7 @@ import boto3
 import os
 import json
 import logging
+from src.functions.utility import headers
 from botocore.exceptions import ClientError
 from src.repositories.repository import registerSlot
 import uuid
@@ -14,14 +15,14 @@ logger.setLevel(logging.INFO)
 # function to book slot
 def book(body):
     try:
-        zipcode = body['zipcode']
-        store_name = body['store_name']
-        slot_date = body['slot_date']
+        zipcode = body.get('zipcode', None)
+        store_name = body.get('store_name', None)
+        slot_date = body.get('slot_date', None)
         logger.info(zipcode)
         logger.info(store_name)
         logger.info(slot_date)
         response = registerSlot(zipcode,store_name,slot_date)
-    except ClientError as e:
+    except (Exception,ClientError) as e:
             raise
     else:
         return response
@@ -39,10 +40,7 @@ def bookSlot(event, context, dynamodb=None):
         }
         logger.info(bodyparams)
         return {'statusCode': 200,
-                'headers': {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Credentials": True,
-                    "Access-Control-Allow-Headers": "Authorization"},
+                'headers': headers,
                 'body': json.dumps(bodyparams)
                 }
     except (Exception,ClientError) as e:
@@ -50,10 +48,7 @@ def bookSlot(event, context, dynamodb=None):
         logger.info(e)
         return {
             'statusCode': 400,
-            'headers':
-                {"Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": True,
-                "Access-Control-Allow-Headers": "Authorization"},
+            'headers':headers,
             'body': json.dumps('Error booking slot')
         }
 

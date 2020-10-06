@@ -3,6 +3,7 @@ import boto3
 import os
 import json
 import logging
+from src.functions.utility import headers
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Key
 from decimal import Decimal
@@ -21,9 +22,9 @@ def default(obj):
 # function to fetch list of stores based on zipcode
 def storesList(body):
     try:
-        zipcode = body['zipcode']
+        zipcode = body.get('zipcode',None)
         response = fetchStores(zipcode)
-    except ClientError as e:
+    except (Exception,ClientError) as e:
         if e.response['Error']['Code'] == "ConditionalCheckFailedException":
             logger.info(e.response['Error']['Message'])
         else:
@@ -38,19 +39,13 @@ def getStores(event, context, dynamodb=None):
         response = storesList(body)
         logger.info(response)
         return {'statusCode': 200,
-                'headers':
-                    {"Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Credentials": True,
-                    "Access-Control-Allow-Headers": "Authorization"},
+                'headers':headers,
                 'body': json.dumps(response['Items'], default=default)}
-    except Exception as e:
+    except (Exception,ClientError) as e:
         logger.info('Closing lambda function')
         logger.info(e.response['Error']['Message'])
         return {
             'statusCode': 400,
-            'headers':
-                {"Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": True,
-                "Access-Control-Allow-Headers": "Authorization"},
+            'headers':headers,
             'body': 'Error:{}'.format(e)
         }

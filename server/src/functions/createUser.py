@@ -3,6 +3,7 @@ import boto3
 import os
 import json
 import logging
+from src.functions.utility import headers
 from botocore.exceptions import ClientError
 from src.repositories.repository import newItem 
 #Logger configuration
@@ -12,11 +13,11 @@ logger.setLevel(logging.INFO)
 #function to construct userCreation request and post item to dynambodb
 def userCreation(body):
     try:
-        user_id = body['user_id']
-        item_type = body['item_type']
-        user_type = body['user_type']
-        dashboard = body['dashboard']
-        user_details = body['user_details']
+        user_id = body.get('user_id', None)
+        item_type = body.get('item_type', None)
+        user_type = body.get('user_type', None)
+        dashboard = body.get('dashboard', None)
+        user_details = body.get('user_details', None)
         item = {
             'pk': user_id,
             'sk': user_type,
@@ -25,14 +26,14 @@ def userCreation(body):
             'user_details': user_details
         }
         if user_type == "shopper":
-            history = body['history']
+            history = body.get('history', None)
             item.update({'history': history})
         elif user_type == "store_owner":
-            store_details = body['store_details']
-            messages = body['messages']
+            store_details = body.get('store_details', None)
+            messages = body.get('messages', None)
             item.update({'store_details': store_details, 'messages': messages})
         response = newItem(item)
-    except ClientError as e:
+    except (Exception,ClientError) as e:
         if e.response['Error']['Code'] == "ConditionalCheckFailedException":
             logger.info(e.response['Error']['Message'])
         else:
@@ -48,19 +49,13 @@ def createUser(event, context, dynamodb=None):
         response = userCreation(body)
         logger.info(response)
         return {'statusCode': 200,
-                'headers':
-                    {"Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Credentials": True,
-                    "Access-Control-Allow-Headers": "Authorization"},
+                'headers':headers,
                 'body': json.dumps('Succesfully created user')}
-    except Exception as e:
+    except (Exception,ClientError) as e:
         logger.info('Closing lambda function')
         logger.info(e.response['Error']['Message'])
         return {
             'statusCode': 400,
-            'headers':
-                {"Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": True,
-                "Access-Control-Allow-Headers": "Authorization"},
+            'headers':headers,
             'body': json.dumps('Error creating user')
         }

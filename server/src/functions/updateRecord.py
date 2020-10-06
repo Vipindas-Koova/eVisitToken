@@ -3,6 +3,7 @@ import boto3
 import os
 import json
 import logging
+from src.functions.utility import headers
 from botocore.exceptions import ClientError
 from boto3.dynamodb.conditions import Key, Attr
 from src.repositories.repository import updateItem
@@ -14,11 +15,11 @@ logger.setLevel(logging.INFO)
 # function to construct userProfile request and update userProfile in dynambodb
 def update(body):
     try:
-        pk = body['pk']
-        sk = body['sk']
-        item = body['item']
+        pk = body.get('pk', None)
+        sk = body.get('sk', None)
+        item = body.get('item', None)
         response = updateItem(pk,sk,item)
-    except ClientError as e:
+    except (Exception,ClientError) as e:
         if e.response['Error']['Code'] == "ConditionalCheckFailedException":
             logger.info(e.response['Error']['Message'])
         else:
@@ -33,19 +34,13 @@ def updateRecord(event, context, dynamodb=None):
         response = update(body)
         logger.info(response)
         return {'statusCode': 200,
-                'headers': {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Credentials": True,
-                    "Access-Control-Allow-Headers": "Authorization"},
+                'headers':headers,
                 'body': json.dumps('Succesfully updated record')}
-    except Exception as e:
+    except (Exception,ClientError) as e:
         logger.info('Closing lambda function')
         logger.info(e)
         return {
             'statusCode': 400,
-            'headers': {
-                "Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": True,
-                "Access-Control-Allow-Headers": "Authorization"},
+            'headers': headers,
             'body': json.dumps('Error updating record')
         }

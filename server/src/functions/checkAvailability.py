@@ -3,6 +3,7 @@ import boto3
 import os
 import json
 import logging
+from src.functions.utility import headers
 from botocore.exceptions import ClientError
 from decimal import Decimal
 from src.repositories.repository import checkSlot
@@ -20,12 +21,12 @@ def default(obj):
 # function to fetch single user details
 def check(body):
     try:
-        zipcode = body['zipcode']
-        store_name = body['store_name']
+        zipcode = body.get('zipcode', None)
+        store_name = body.get('store_name', None)
         logger.info(zipcode)
         logger.info(store_name)
         response = checkSlot(zipcode,store_name)
-    except (ClientError, KeyError) as e:
+    except (Exception,ClientError, KeyError) as e:
         if e.response['Error']['Code'] == "ConditionalCheckFailedException":
             logger.info(e.response['Error']['Message'])
         else:
@@ -42,20 +43,14 @@ def checkAvailability(event, context, dynamodb=None):
         if 'Item' not in response:
             raise KeyError('User does not exist')
         return {'statusCode': 200,
-                'headers':
-                    {"Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Credentials": True,
-                    "Access-Control-Allow-Headers": "Authorization"},
+                'headers':headers,
                 'body': json.dumps(response['Item'], default=default)
                 }
-    except Exception as e:
+    except (Exception,ClientError, KeyError) as e:
         logger.info('Closing lambda function')
         logger.info(e)
         return {
             'statusCode': 400,
-            'headers':
-                {"Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": True,
-                "Access-Control-Allow-Headers": "Authorization"},
+            'headers':headers,
             'body': 'Error:{}'.format(e)
         }

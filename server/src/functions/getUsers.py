@@ -3,9 +3,11 @@ import boto3
 import os
 import json
 import logging
+from src.functions.utility import headers
 from botocore.exceptions import ClientError
 from decimal import Decimal
 from src.repositories.repository import fetchUsers
+
 
 # dynamodb instance creation
 dynamodb = boto3.resource('dynamodb')
@@ -27,7 +29,7 @@ def fetchAllUsers():
          while 'LastEvaluatedKey' in response:
             response = etoken_table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
             data.extend(response['Items'])
-    except ClientError as e:
+    except (Exception,ClientError, KeyError) as e:
         if e.response['Error']['Code'] == "ConditionalCheckFailedException":
             logger.info(e.response['Error']['Message'])
         else:
@@ -43,20 +45,14 @@ def getUsers(event, context, dynamodb=None):
         
         logger.info(response)
         return {'statusCode': 200,
-                'headers':
-                    {"Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Credentials": True,
-                    "Access-Control-Allow-Headers": "Authorization"},
+                'headers':headers,
                 'body': json.dumps(data, default=default)
                 }
-    except Exception as e:
+    except (Exception,ClientError, KeyError) as e:
         logger.info('Closing lambda function')
         logger.info(e)
         return {
             'statusCode': 400,
-            'headers':
-                {"Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": True,
-                "Access-Control-Allow-Headers": "Authorization"},
+            'headers':headers,
             'body': 'Error:{}'.format(e)
         }

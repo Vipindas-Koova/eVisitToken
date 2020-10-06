@@ -27,15 +27,7 @@ Resources:
                   - logs:PutLogEvents
                 Resource:
                   - "*"   
-        # - PolicyName: "${self:service}-${self:provider.stage}-appsync-Policy"
-        #   PolicyDocument:
-        #     Version: "2012-10-17"
-        #     Statement:
-        #       - Effect: "Allow"
-        #         Action:
-        #           - "lambda:invokeFunction"
-        #         Resource:
-        #           - "arn:aws:lambda:${self:custom.appSync.region}:#{AWS::AccountId}:function:${self:service}-${self:provider.stage}-*"
+        
         - PolicyName: "${self:service}-${self:provider.stage}-dynamodb-stream-Policy"
           PolicyDocument:
             Version: "2012-10-17"

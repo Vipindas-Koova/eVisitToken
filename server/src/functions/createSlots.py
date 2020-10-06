@@ -3,6 +3,7 @@ import boto3
 import os
 import json
 import logging
+from src.functions.utility import headers
 from botocore.exceptions import ClientError
 from src.repositories.repository import newSlots
 from datetime import datetime
@@ -15,13 +16,13 @@ logger.setLevel(logging.INFO)
 #function to construct userCreation request and post item to dynambodb
 def slotsCreation(body):
     try:
-        zipcode = body['zipcode']
-        store_name = body['store_name']
-        slot_date = body['slot_date']
-        start_time = body['start_time']
-        end_time = body['end_time']
-        shopping_time = body ['shopping_time']
-        capacity = body ['capacity']
+        zipcode = body['zipcode'].get('zipcode', None)
+        store_name = body.get('store_name', None)
+        slot_date = body.get('slot_date', None)
+        start_time = body.get('start_time', None)
+        end_time = body.get('end_time', None)
+        shopping_time = body.get('shopping_time', None)
+        capacity = body.get('capacity', None)
         tokens = generateTokens(start_time,end_time,shopping_time,capacity)
         logger.info(tokens)
         slot_info={
@@ -36,7 +37,7 @@ def slotsCreation(body):
         else:
             for d in slot_date:
                 response = newSlots(zipcode,store_name,d,slot_info)
-    except ClientError as e:
+    except (Exception,ClientError) as e:
         if e.response['Error']['Code'] == "ConditionalCheckFailedException":
             logger.info(e.response['Error']['Message'])
         else:
@@ -56,18 +57,12 @@ def createSlots(event, context, dynamodb=None):
         response = slotsCreation(body)
         logger.info(response)
         return {'statusCode': 200,
-                'headers':
-                    {"Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Credentials": True,
-                    "Access-Control-Allow-Headers": "Authorization"},
+                'headers':headers,
                 'body': json.dumps('Succesfully created slot')}
-    except Exception as e:
+    except (Exception,ClientError) as e:
         logger.info('Closing lambda function')
         return {
             'statusCode': 400,
-            'headers':
-                {"Access-Control-Allow-Origin": "*",
-                "Access-Control-Allow-Credentials": True,
-                "Access-Control-Allow-Headers": "Authorization"},
+            'headers':headers,
             'body': json.dumps('Error creating slot')
         }

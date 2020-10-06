@@ -1,5 +1,3 @@
-
-org: amarn19
 app: etoken
 service: etokenDocker
 
@@ -33,7 +31,7 @@ custom:
         config:
           functionName: graphql
   
-  imageUploadBucket: ${self:service}-profile-images
+  imageuploadbucket: ${self:service}-profile-images
 
 provider:
   name: aws
@@ -47,7 +45,7 @@ provider:
   environment:
     ETOKEN_TABLE: ${self:service}-${opt:stage,self:provider.stage}
     DynamoDBStream: ${self:service}-events-${opt:stage,self:provider.stage}
-    imageUploadBucket: ${self:custom.imageUploadBucket}
+    imageUploadBucket: ${self:custom.imageuploadbucket}
 
 functions:
   - ${file(deploy/rest.yml)}
@@ -75,12 +73,3 @@ package:
     - ./handler.py
     - deploy/**
     - src/**
-
-# Outputs:
-#   UserPoolId:
-#     Value:
-#       Ref: CognitoUserPool
-
-#   UserPoolClientId:
-#     Value:
-#       Ref: CognitoUserPoolClient

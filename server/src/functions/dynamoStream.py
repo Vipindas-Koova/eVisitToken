@@ -26,6 +26,6 @@ def streamHandler(event, context):
         response = streamEvent(event)
         logger.info(response)
         return 'Successfully logged event'
-    except Exception as e:
+    except (Exception,ClientError) as e:
         logger.info('Closing lambda function')
         return 'Logging event was unsuccessful'

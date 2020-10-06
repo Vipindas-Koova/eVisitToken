@@ -3,6 +3,7 @@ import boto3
 import os
 import json
 import logging
+from src.functions.utility import headers
 from botocore.exceptions import ClientError
 from src.repositories.repository import newItem
 
@@ -13,10 +14,10 @@ logger.setLevel(logging.INFO)
 # function to construct storeCreation request and post item to dynambodb
 def storeCreation(body):
     try:
-        zipcode = body['zipcode']
-        store_name = body['store_name']
-        store_details = body['store_details']
-        slots = body['slots']
+        zipcode = body['zipcode'].get('zipcode', None)
+        store_name = body.get('store_name', None)
+        store_details = body.get('store_details', None)
+        slots = body.get('slots', None)
         item = {
             'pk': zipcode,
             'sk': store_name,
@@ -25,7 +26,7 @@ def storeCreation(body):
         }
         logger.info(item)
         response = newItem(item)
-    except ClientError as e:
+    except (Exception,ClientError) as e:
         if e.response['Error']['Code'] == "ConditionalCheckFailedException":
             logger.info(e.response['Error']['Message'])
         else:
@@ -40,19 +41,13 @@ def createStore(event, context, dynamodb=None):
         response = storeCreation(body)
         logger.info(response)
         return {'statusCode': 200,
-                'headers': {
-                    "Access-Control-Allow-Origin": "*",
-                    "Access-Control-Allow-Credentials": True,
-                    "Access-Control-Allow-Headers": "Authorization"},
+                'headers': headers,
                 'body': json.dumps('Succesfully created Store')}
-    except Exception as e:
+    except (Exception,ClientError) as e:
         logger.info('Closing lambda function')
         logger.info(e)
         return {
             'statusCode': 400,
-            'headers': {
-                "Access-Control-Allow-Origin": "*", 
-                "Access-Control-Allow-Credentials": True, 
-                "Access-Control-Allow-Headers": "Authorization"},
+            'headers': headers,
             'body': json.dumps('Error creating Store')
         }

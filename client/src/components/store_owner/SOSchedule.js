@@ -173,15 +173,16 @@ class SOSchedule extends Component {
                             </Form>
                         </div>
                     </Col>
-                    <Col span={16}>
+                    <Col span={2}></Col>
+                    <Col span={14}>
                         <div>
                             <Card title={scheduler_sub_title[1]} bordered={true}>
-                                {/* {this.state.timeslots.map((msg, i) => (
+                                {this.state.timeslots.map((msg, i) => (
                                     <this.Toast key={i} message={msg} />
-                                ))} */}
-                                {Object.keys(this.props.data.slots).map((i) => (
-                                    <this.Toast key={i} message={i} />
                                 ))}
+                                {/* {Object.keys(this.props.data.slots).map((i) => (
+                                    <this.Toast key={i} message={i} />
+                                ))} */}
                             </Card>
                         </div>
                     </Col>
