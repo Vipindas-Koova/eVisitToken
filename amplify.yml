@@ -25,7 +25,7 @@ frontend:
         - npm build-prod
     postBuild:
       commands:
-        - echo "a"
+        - echo "b"
   artifcats:
     baseDirectory: ./client/build
     files:
