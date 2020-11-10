@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import ForgotPassword from '../components/auth/Forgotpassword';
+import ForgotPassword from '../components/auth/ForgotPassword';
 import Homepage from '../components/Homepage';
 import PageNotFound from '../components/PageNotFound';
 import SignupVerification from '../components/auth/SignupVerification';
