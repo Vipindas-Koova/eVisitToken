@@ -26,8 +26,8 @@ frontend:
     postBuild:
       commands:
         - echo "b"
-  artifcats:
-    baseDirectory: ./client/public/
+  artifacts:
+    baseDirectory: ./client/build/
     files:
       - '**/*'
   cache:
