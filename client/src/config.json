@@ -1,23 +1,23 @@
 {
   "api": { 
-    "invokeUrl": "https://sx2c5f6tke.execute-api.us-east-1.amazonaws.com/dev"
+    "invokeUrl": "https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev"
   },
   "cognito": {
     "REGION": "us-east-1",
-    "USER_POOL_ID": "us-east-1_ZLmjBgJhF",
-    "APP_CLIENT_ID": "6e5le2g70qcjbs7ok6un39qbel"
+    "USER_POOL_ID": " us-east-2_bTWNdDpen",
+    "APP_CLIENT_ID": "6n4bj62f3i0tde6vvimefcsndf"
   },
   "lambda_api":{
     "dev":{
-      "fetchUser":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/fetch",
-      "createUser":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/register",
-      "getStores":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/getStores",
-      "createStoreProfile":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/registerStore",
-      "updateRecord":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/updateRecord",
-      "createSlots":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/createSlot",
-      "bookSlot":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/bookSlot",
-      "checkSlot":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/checkSlot",
-      "userBooking":"https://d01nqc7kl5.execute-api.us-east-1.amazonaws.com/dev4/user/userBooking"
+      "fetchUser":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/fetch",
+      "createUser":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/register",
+      "getStores":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/getStores",
+      "createStoreProfile":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/registerStore",
+      "updateRecord":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/updateRecord",
+      "createSlots":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/createSlot",
+      "bookSlot":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/bookSlot",
+      "checkSlot":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/checkSlot",
+      "userBooking":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/userBooking"
     }
   }
 }
