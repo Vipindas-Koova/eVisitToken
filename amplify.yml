@@ -8,8 +8,8 @@ backend:
     build:
       commands:
         - cd server
-        - npm i
-        - serverless deploy --stage dev
+        #- npm i
+        #- serverless deploy --stage dev
     postBuild:
       commands:
         - cd ..

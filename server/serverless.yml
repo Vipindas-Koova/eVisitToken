@@ -31,14 +31,16 @@ custom:
         config:
           functionName: graphql
   
-  imageuploadbucket: ${self:service}-profile-images
+  imageuploadbucket: nitor-serverless-bucket-${opt:stage}
 
 provider:
   name: aws
   runtime: python3.7
-  region: us-east-1
+  region: us-east-2
   role: EtokenServiceRole
   stage: ${opt:stage}
+  deploymentBucket:
+    name: nitor-serverless-bucket-${opt:stage}
   memorySize: 128
   timeout: 5
   endpointType: regional
@@ -51,7 +53,7 @@ functions:
   - ${file(deploy/rest.yml)}
 resources:
   - ${file(deploy/dynamodb.yml)}
-  - ${file(deploy/s3.yml)}
+  #- ${file(deploy/s3.yml)}
   - ${file(deploy/servicerole.yml)}
   - ${file(deploy/cognito.yml)}
   - ${file(deploy/apiauthorizer.yml)}
