@@ -27,7 +27,7 @@ frontend:
       commands:
         - echo "b"
   artifacts:
-    baseDirectory: ./client/build/
+    baseDirectory: ./client/public/
     files:
       - '**/*'
   cache:
