@@ -18,7 +18,7 @@ frontend:
     preBuild:
       commands:
         - cd client
-        - npm install -g yarn
+        #- npm install -g yarn
         - yarn install
     build:
       commands:
