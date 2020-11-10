@@ -3,8 +3,8 @@
     "invokeUrl": "https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev"
   },
   "cognito": {
-    "REGION": "us-east-1",
-    "USER_POOL_ID": " us-east-2_bTWNdDpen",
+    "REGION": "us-east-2",
+    "USER_POOL_ID": "us-east-2_bTWNdDpen",
     "APP_CLIENT_ID": "6n4bj62f3i0tde6vvimefcsndf"
   },
   "lambda_api":{
