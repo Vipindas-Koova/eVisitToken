@@ -22,7 +22,7 @@ frontend:
         - yarn install
     build:
       commands:
-        - npm build-prod
+        - yarn run build-prod
     postBuild:
       commands:
         - echo "b"

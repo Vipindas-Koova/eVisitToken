@@ -40,6 +40,7 @@
     "react-modal": "^3.11.2",
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
+    "redux": "^4.0.5",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
@@ -50,8 +51,8 @@
     "yarn": "^1.22.4"
   },
   "devDependencies": {
-    "webpack-cli": "^3.3.11",
     "live-server": "^1.2.1",
+    "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0"
   }
 }

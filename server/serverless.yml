@@ -1,5 +1,5 @@
 app: etoken
-service: etokenDocker
+service: etoken
 
 plugins:
   - serverless-pseudo-parameters
