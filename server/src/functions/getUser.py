@@ -43,7 +43,7 @@ def getUser(event, context, dynamodb=None):
         if 'Item' not in response:
             raise KeyError('User does not exist')
         return {'statusCode': 200,
-                'headers':headers,
+                'headers':headers(),
                 'body': json.dumps(response['Item'], default=default)
                 }
     except (Exception,ClientError, KeyError) as e:
@@ -51,6 +51,6 @@ def getUser(event, context, dynamodb=None):
         logger.info(e)
         return {
             'statusCode': 400,
-            'headers':headers,
+            'headers':headers(),
             'body': 'Error:{}'.format(e)
         }

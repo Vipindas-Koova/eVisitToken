@@ -38,7 +38,7 @@ class SigninOwner extends Component {
                 user_type: "store_owner"
             }
             const headers = {
-                'Authorization': idToken
+                'Authorization': 'Bearer ' + idToken
             }
             this.props.fetchUserDetails(params, headers);
             this.props.auth.setAuthStatus(true);

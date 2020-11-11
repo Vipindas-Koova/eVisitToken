@@ -9,15 +9,15 @@
   },
   "lambda_api":{
     "dev":{
-      "fetchUser":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/fetch",
-      "createUser":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/register",
-      "getStores":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/getStores",
-      "createStoreProfile":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/registerStore",
-      "updateRecord":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/updateRecord",
-      "createSlots":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/createSlot",
-      "bookSlot":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/bookSlot",
-      "checkSlot":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/checkSlot",
-      "userBooking":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev4/user/userBooking"
+      "fetchUser":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev/user/fetch",
+      "createUser":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev/user/register",
+      "getStores":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev/user/getStores",
+      "createStoreProfile":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev/user/registerStore",
+      "updateRecord":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev/user/updateRecord",
+      "createSlots":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev/user/createSlot",
+      "bookSlot":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev/user/bookSlot",
+      "checkSlot":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev/user/checkSlot",
+      "userBooking":"https://dvhi9w4ia2.execute-api.us-east-2.amazonaws.com/dev/user/userBooking"
     }
   }
 }
